@@ -6,17 +6,144 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "xo"
   },
   "dependencies": {
+    "next": "15.0.1",
     "react": "19.0.0-rc-69d4b800-20241021",
-    "react-dom": "19.0.0-rc-69d4b800-20241021",
-    "next": "15.0.1"
+    "react-dom": "19.0.0-rc-69d4b800-20241021"
   },
   "devDependencies": {
+    "eslint": "^8",
+    "eslint-config-next": "15.0.1",
+    "eslint-config-xo": "^0.46.0",
+    "eslint-config-xo-nextjs": "^6.2.1",
+    "eslint-config-xo-react": "^0.27.0",
+    "eslint-plugin-react": "^7.37.2",
+    "eslint-plugin-react-hooks": "^5.0.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.1"
-  }
+    "xo": "^0.59.3"
+  },
+  "xo": {
+    "extends": "xo-nextjs",
+    "envs": [
+      "browser",
+      "node",
+      "es2021"
+    ],
+    "parserOptions": {
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    },
+    "globals": [
+      "React"
+    ],
+    "semicolon": false,
+    "space": 2,
+    "rules": {
+      "react/prop-types": "off",
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-export-from": "off",
+      "unicorn/import-style": "off",
+      "unicorn/prefer-ternary": "off",
+      "unicorn/prefer-module": "off",
+      "unicorn/prefer-node-protocol": "off",
+      "n/prefer-global/process": "off",
+      "n/prefer-global/buffer": "off",
+      "import/no-unassigned-import": "off",
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "import/order": [
+        "error",
+        {
+          "groups": [
+            "builtin",
+            "external",
+            "internal",
+            "parent",
+            "sibling",
+            "index"
+          ],
+          "pathGroups": [
+            {
+              "pattern": "react",
+              "group": "builtin",
+              "position": "before"
+            },
+            {
+              "pattern": "routes/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "services/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "helpers/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "util/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "contexts/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "hoc/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "hooks/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "components/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "containers/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "assets/**",
+              "group": "internal",
+              "position": "before"
+            },
+            {
+              "pattern": "styles/**",
+              "group": "internal",
+              "position": "before"
+            }
+          ],
+          "pathGroupsExcludedImportTypes": [
+            "react"
+          ],
+          "newlines-between": "always",
+          "alphabetize": {
+            "order": "asc",
+            "caseInsensitive": true
+          }
+        }
+      ]
+    }
+  },
+  "engines": {
+    "node": ">= 20.9 < 21"
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
