@@ -3,15 +3,10 @@
 import {startReactDsfr} from '@codegouvfr/react-dsfr/next-appdir'
 import Link from 'next/link'
 
-import {defaultColorScheme} from './default-color-scheme.ts'
+import {defaultColorScheme} from './default-color-scheme.js'
 
-declare module '@codegouvfr/react-dsfr/next-appdir' {
-  type RegisterLink = {
-    Link: typeof Link;
-  }
-}
-
+// Initialisation de react-dsfr avec les paramètres nécessaires
 startReactDsfr({defaultColorScheme, Link})
 
+// Composant StartDsfr
 export const StartDsfr = () => null
-

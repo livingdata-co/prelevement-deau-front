@@ -1,0 +1,22 @@
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
+export async function getDossiers() {
+  const response = await fetch(`${API_URL}/dossiers`)
+  const dossiers = await response.json()
+  return dossiers
+}
+
+export async function getDossier(_id) {
+  const response = await fetch(`${API_URL}/dossiers/${_id}`)
+  const dossier = await response.json()
+  return dossier
+}
+
+export async function getFile(dossierId, checksum) {
+  const response = await fetch(`${API_URL}/dossiers/${dossierId}/files/${checksum}`)
+  if (!response.ok) {
+    throw new Error('Failed to fetch file')
+  }
+
+  return response.blob()
+}
