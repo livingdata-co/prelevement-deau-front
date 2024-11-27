@@ -20,3 +20,19 @@ export async function getFile(dossierId, checksum) {
 
   return response.blob()
 }
+
+export async function validateFile(buffer, fileType) {
+  const response = await fetch(`${API_URL}/validate-file?fileType=${fileType}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/octet-stream'
+    },
+    body: buffer
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to validate file')
+  }
+
+  return response.json()
+}

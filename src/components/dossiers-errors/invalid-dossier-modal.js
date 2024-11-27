@@ -5,35 +5,25 @@ import {
 } from 'react'
 
 import {Badge} from '@codegouvfr/react-dsfr/Badge'
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import {Button} from '@codegouvfr/react-dsfr/Button'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import {
   List,
-  ListItem,
   ListItemText,
   Collapse,
   ListItemButton,
   ListItemIcon,
-  Button,
   Box,
-  Grid2 as Grid,
   CircularProgress
 } from '@mui/material'
-import {deburr, camelCase} from 'lodash-es'
 
-import {getDossier, getFile} from '../../app/api/dossiers.js'
-
-const ErrorToggleButton = ({onClick}) => (
-  <Button variant='contained' size='small' onClick={onClick}>
-    Voir plus
-  </Button>
-)
+import {getDossier, getFile} from '@/app/api/dossiers.js'
+import FileValidationErrors from '@/components/dossiers-errors/file-validation-errors.js'
 
 const InvalidDossierModal = ({selectedDossier}) => {
   const [openFiles, setOpenFiles] = useState({})
   const [isLoading, setIsLoading] = useState(true)
-  const [limit, setLimit] = useState(10)
   const [files, setFiles] = useState([])
 
   useEffect(() => {
@@ -47,7 +37,6 @@ const InvalidDossierModal = ({selectedDossier}) => {
   }, [selectedDossier.id])
 
   const toggleFile = useCallback(file => {
-    setLimit(10)
     setOpenFiles(prev => ({...prev, [file]: !prev[file]}))
   }, [])
 
@@ -79,77 +68,34 @@ const InvalidDossierModal = ({selectedDossier}) => {
 
             return (
               <div key={filename}>
-                <ListItemButton onClick={() => toggleFile(filename)}>
-                  <ListItemText primary={filename} />
-                  <ListItemIcon>
-                    {declarantErrors.length > 0 && (
-                      <div>
-                        <Badge noIcon severity='warning'>
-                          {declarantErrors.length}
-                        </Badge>
-                      </div>
-                    )}
-                    {administrateurErrors.length > 0 && (
-                      <div style={{marginLeft: '8px'}}>
-                        <Badge noIcon severity='error'>
-                          {administrateurErrors.length}
-                        </Badge>
-                      </div>)}
-                    {openFiles[filename] ? <ExpandLess /> : <ExpandMore />}
-                  </ListItemIcon>
-                </ListItemButton>
-                <Collapse unmountOnExit in={openFiles[filename]} timeout='auto'>
-                  <List disablePadding component='div'>
-                    {declarantErrors.length > 0 && (
-                      <>
-                        <ListItem style={{paddingLeft: '2rem'}}>
-                          <Grid display='flex' flex={1} align='center' justifyContent='space-between'>
-                            <Badge noIcon severity='warning'>
-                              {`${declarantErrors.length} erreurs déclarant`}
-                            </Badge>
-                            <Button variant='contained' onClick={() => downloadFile({checksum, filename})}>
-                              Télécharger
-                            </Button>
-                          </Grid>
-                        </ListItem>
-
-                        {declarantErrors.slice(0, limit).map(error => (
-                          <ListItem key={`declarant-${camelCase(deburr(error.message))}`} style={{paddingLeft: '3rem'}}>
-                            <ListItemIcon>
-                              <ErrorOutlineIcon color='error' />
-                            </ListItemIcon>
-                            <ListItemText primary={`${error.message}`} />
-                          </ListItem>
-                        ))}
-
-                        {declarantErrors.length > limit && (
-                          <ErrorToggleButton onClick={() => setLimit(limit + 10)} />
-                        )}
-                      </>
-                    )}
-                    {administrateurErrors.length > 0 && (
-                      <>
-                        <ListItem style={{paddingLeft: '2rem', marginTop: '1rem'}}>
-                          <Badge noIcon severity='error'>
-                            {`${administrateurErrors.length} erreurs administrateur`}
+                <div className='flex gap-2'>
+                  <ListItemButton onClick={() => toggleFile(filename)}>
+                    <ListItemText primary={filename} />
+                    <ListItemIcon>
+                      {declarantErrors.length > 0 && (
+                        <div>
+                          <Badge noIcon severity='warning'>
+                            {declarantErrors.length}
                           </Badge>
-                        </ListItem>
-
-                        {administrateurErrors.slice(0, limit).map(error => (
-                          <ListItem key={`admin-${camelCase(deburr(error.message))}`} style={{paddingLeft: '3rem'}}>
-                            <ListItemIcon>
-                              <ErrorOutlineIcon color='error' />
-                            </ListItemIcon>
-                            <ListItemText primary={`${error.message}`} />
-                          </ListItem>
-                        ))}
-
-                        {administrateurErrors.length > limit && (
-                          <ErrorToggleButton onClick={() => setLimit(limit + 10)} />
-                        )}
-                      </>
-                    )}
-                  </List>
+                        </div>
+                      )}
+                      {administrateurErrors.length > 0 && (
+                        <div style={{marginLeft: '8px'}}>
+                          <Badge noIcon severity='error'>
+                            {administrateurErrors.length}
+                          </Badge>
+                        </div>)}
+                      {openFiles[filename] ? <ExpandLess /> : <ExpandMore />}
+                    </ListItemIcon>
+                  </ListItemButton>
+                  <Button
+                    iconId='fr-icon-download-line'
+                    title='Télécharger'
+                    onClick={() => downloadFile({checksum, filename})}
+                  />
+                </div>
+                <Collapse unmountOnExit in={openFiles[filename]} timeout='auto'>
+                  <FileValidationErrors errors={errors} />
                 </Collapse>
               </div>
             )

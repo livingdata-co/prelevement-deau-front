@@ -7,10 +7,44 @@ import {usePathname} from 'next/navigation'
 import LoginHeaderItem from '@/components/ui/login-header-item.js'
 
 const navigationItems = [
-  {href: '/', text: 'Démarches simplifées'},
-  {href: '/prelevements-deau', text: 'Prélèvements d’eau'},
-  {href: '/preleveurs', text: 'Préleveurs'},
-  {href: '/points-prelevement', text: 'Points de prélèvement'}
+  {
+    menuLinks: [
+      {
+        linkProps: {
+          href: '/'
+        },
+        text: 'Dossier invalide'
+      },
+      {
+        linkProps: {
+          href: '/validateur'
+        },
+        text: 'Validateur de fichier'
+      }
+    ],
+    text: 'Démarches simplifées'
+  },
+  {
+    linkProps: {
+      href: '/prelevements-deau',
+      target: '_self'
+    },
+    text: 'Prélèvements d’eau'
+  },
+  {
+    linkProps: {
+      href: '/preleveurs',
+      target: '_self'
+    },
+    text: 'Préleveurs'
+  },
+  {
+    linkProps: {
+      href: '/points-prelevement',
+      target: '_self'
+    },
+    text: 'Points de prélèvement'
+  }
 ]
 
 const HeaderComponent = ({user}) => {
@@ -18,7 +52,7 @@ const HeaderComponent = ({user}) => {
 
   const isActive = href => {
     if (href === '/') {
-      return pathname === href // Correspondance exacte pour "/"
+      return pathname === href || pathname === '/validateur'
     }
 
     return pathname.startsWith(href) // Correspondance partielle pour les autres chemins
@@ -35,7 +69,7 @@ const HeaderComponent = ({user}) => {
       quickAccessItems={[
         headerFooterDisplayItem,
         {
-          iconId: 'fr-icon-logout',
+          iconId: 'fr-icon-mail-fill',
           linkProps: {
             href: 'mailto:contact@code.gouv.fr'
           },
@@ -44,13 +78,9 @@ const HeaderComponent = ({user}) => {
         user ? <LoginHeaderItem key={0} /> : null
       ]}
       navigation={
-        navigationItems.map(({href, text}) => ({
-          linkProps: {
-            href,
-            target: '_self'
-          },
-          text,
-          isActive: isActive(href)
+        navigationItems.map(item => ({
+          ...item,
+          isActive: isActive(item.linkProps?.href || item.menuLinks[0].linkProps.href)
         }))
       }
     />
