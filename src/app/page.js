@@ -1,28 +1,38 @@
-import {Suspense} from 'react'
+import {Alert} from '@codegouvfr/react-dsfr/Alert'
 
 import {getDossiers} from '@/app/api/dossiers.js'
-import DossiersErrors from '@/components/dossiers-errors.js'
-import {TableSkeleton} from '@/components/skeletons.js'
+import InvalidDossiersList from '@/components/dossiers-errors/invalid-dossiers-list.js'
 
-const DossierListAsync = async () => {
-  const dossiers = await getDossiers()
+const Home = async () => {
+  let dossiers = []
+  let error = null
+
+  try {
+    dossiers = await getDossiers()
+  } catch (error_) {
+    console.error('Erreur lors de la récupération des dossiers:', error_)
+    error = 'Une erreur est survenue lors du chargement des dossiers. Veuillez réessayer plus tard.'
+  }
+
   const invalidDossiers = dossiers.filter(({isValid}) => !isValid)
 
   return (
-    <DossiersErrors dossiers={invalidDossiers.map(dossier => ({
-      ...dossier,
-      errorsCount: dossier.files.reduce((acc, file) => acc + file.errors.length, 0)
-    }))} />
+    <div className='fr-container'>
+      {error ? (
+        <Alert
+          closable
+          description={error}
+          severity='error'
+          title='Erreur de chargement'
+        />
+      ) : (
+        <InvalidDossiersList dossiers={invalidDossiers.map(dossier => ({
+          ...dossier,
+          errorsCount: dossier.files.reduce((acc, file) => acc + file.errors.length, 0)
+        }))} />
+      )}
+    </div>
   )
 }
 
-const Home = () => (
-  <Suspense fallback={<TableSkeleton />}>
-    <div className='fr-container'>
-      <DossierListAsync />
-    </div>
-  </Suspense>
-)
-
 export default Home
-

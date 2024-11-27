@@ -39,7 +39,7 @@ const InvalidDossierModal = ({selectedDossier}) => {
   useEffect(() => {
     async function fetchDossier() {
       const dossier = await getDossier(selectedDossier.id)
-      setFiles(dossier.files || [])
+      setFiles(dossier.files?.filter(({errors}) => errors.length > 0) || [])
       setIsLoading(false)
     }
 
