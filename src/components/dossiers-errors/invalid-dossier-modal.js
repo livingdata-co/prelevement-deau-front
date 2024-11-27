@@ -68,7 +68,7 @@ const InvalidDossierModal = ({selectedDossier}) => {
 
             return (
               <div key={filename}>
-                <div className='flex gap-2'>
+                <div className='flex gap-2 items-center'>
                   <ListItemButton onClick={() => toggleFile(filename)}>
                     <ListItemText primary={filename} />
                     <ListItemIcon>
