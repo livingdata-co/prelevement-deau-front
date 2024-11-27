@@ -6,7 +6,7 @@
   "scripts": {
     "predev": "react-dsfr update-icons",
     "dev": "next dev",
-    "prebuild": "react-dsfr update-icons",
+    "scalingo-prebuild": "react-dsfr update-icons",
     "build": "next build",
     "start": "next start",
     "lint": "xo"
