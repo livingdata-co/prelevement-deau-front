@@ -90,9 +90,9 @@
     "@babel/helper-validator-identifier" "^7.25.9"
 
 "@codegouvfr/react-dsfr@^1.14.1":
-  version "1.14.8"
-  resolved "https://registry.yarnpkg.com/@codegouvfr/react-dsfr/-/react-dsfr-1.14.8.tgz#dd7ed7019ceb8667bf192fdb9ea18726d180a9e8"
-  integrity sha512-PtIWyhiDG9M+89LPTr4ZW0Vxp1x9ZfXrJX8CTQd0J8bIc63oDw6+1Pgj4TMi2gmRy/WyjL/77ZDp+2wMCuXGAQ==
+  version "1.14.10"
+  resolved "https://registry.yarnpkg.com/@codegouvfr/react-dsfr/-/react-dsfr-1.14.10.tgz#54bb3b699f477bd6f25c6c38a36887e94c6287c0"
+  integrity sha512-cKeYbW92OT0muQ5EF2LLnOhAl8jGsvgjH3snOgbQyfp4YMkW6GuSijM8DzyH1Q+bv9pV29mRfGIOujY8eBVuAw==
   dependencies:
     tsafe "^1.8.5"
     yargs-parser "^21.1.1"
