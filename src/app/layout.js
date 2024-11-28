@@ -10,6 +10,7 @@ import {StartDsfr} from '@/app/start-dsfr.js'
 import Footer from '@/components/footer.js'
 import Header from '@/components/header.js'
 
+import '@codegouvfr/react-dsfr/dsfr/utility/icons/icons.min.css'
 import '@/app/globals.css'
 
 export const metadata = {
