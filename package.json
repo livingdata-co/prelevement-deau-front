@@ -4,9 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "predev": "react-dsfr update-icons",
     "dev": "next dev",
-    "scalingo-prebuild": "yarn install && yarn react-dsfr update-icons",
     "build": "next build",
     "start": "next start",
     "lint": "xo"
