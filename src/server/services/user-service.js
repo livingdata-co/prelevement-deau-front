@@ -8,6 +8,7 @@ function authenticate(password) {
   }
 
   const user = {
+    id: 1,
     role: 'admin'
   }
 

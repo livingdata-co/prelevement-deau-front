@@ -1,6 +1,4 @@
-import {
-  getServerSession
-} from 'next-auth'
+import {getServerSession} from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 import {userService} from '@/server/services/user-service.js'
@@ -10,14 +8,14 @@ export const authOptions = {
     strategy: 'jwt'
   },
   callbacks: {
-    async jwt({token, account, profile}) {
-      if (account && account.type === 'credentials') {
-        token.userId = account.providerAccountId
+    async jwt({token, user}) {
+      if (user) {
+        token.userId = user.id
       }
 
       return token
     },
-    async session({session, token, user}) {
+    async session({session, token}) {
       session.user.id = token.userId
       return session
     }
@@ -31,10 +29,14 @@ export const authOptions = {
       credentials: {
         password: {label: 'Password', type: 'password'}
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const {password} = credentials
+        const user = await userService.authenticate(password)
+        if (user) {
+          return {id: user.id, ...user}
+        }
 
-        return userService.authenticate(password)
+        return null
       }
     })
   ]
