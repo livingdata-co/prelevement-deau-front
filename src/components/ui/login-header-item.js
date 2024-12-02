@@ -10,7 +10,10 @@ const LoginHeaderItem = ({id}) => (
         text: 'Se déconnecter',
         buttonProps: {
           onClick() {
-            signOut()
+            signOut({
+              callbackUrl: '/login',
+              redirect: true
+            })
           }
         }
       }

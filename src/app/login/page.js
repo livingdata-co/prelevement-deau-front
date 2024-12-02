@@ -11,6 +11,7 @@ import {signIn} from 'next-auth/react'
 const LoginPage = ({searchParams}) => {
   const params = React.use(searchParams)
   const [input, setInput] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleChange = event => {
     const {value} = event.target
@@ -18,11 +19,15 @@ const LoginPage = ({searchParams}) => {
   }
 
   const handleSubmit = async event => {
+    setIsLoading(true)
+
     event.preventDefault()
     await signIn('credentials', {
       password: input,
-      callbackUrl: '/'
+      callbackUrl: searchParams.callbackUrl || '/'
     })
+
+    setIsLoading(false)
   }
 
   return (
@@ -44,9 +49,10 @@ const LoginPage = ({searchParams}) => {
 
           <Button
             type='submit'
+            disabled={input.length === 0 || isLoading}
             className='w-full justify-center'
           >
-            Se connecter
+            {isLoading ? 'Connexion…' : 'Se connecter'}
           </Button>
 
           {params.error && (

@@ -31,12 +31,7 @@ export const authOptions = {
       },
       async authorize(credentials) {
         const {password} = credentials
-        const user = await userService.authenticate(password)
-        if (user) {
-          return {id: user.id, ...user}
-        }
-
-        return null
+        return userService.authenticate(password)
       }
     })
   ]

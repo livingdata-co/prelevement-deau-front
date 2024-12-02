@@ -3,14 +3,12 @@ export const userService = {
 }
 
 function authenticate(password) {
-  if (password !== process.env.ADMIN_PASSWORD) {
-    return null
+  if (password === process.env.ADMIN_PASSWORD) {
+    return {
+      id: 1,
+      role: 'admin'
+    }
   }
 
-  const user = {
-    id: 1,
-    role: 'admin'
-  }
-
-  return user
+  return null
 }
