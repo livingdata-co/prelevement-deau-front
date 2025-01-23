@@ -73,7 +73,8 @@ const InvalidDossiersList = ({dossiers}) => {
   }
 
   return (
-    <>
+    // On ajoute 1px pour compenser le débordement provoqué par la bordure du header et supprimer la seconde scrollbar.
+    <div className='flex h-[calc(100%+1px)]'>
       <DataGrid
         disableRowSelectionOnClick
         localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
@@ -152,7 +153,7 @@ const InvalidDossiersList = ({dossiers}) => {
           <InvalidDossierModal selectedDossier={selectedDossier} />
         )}
       </modal.Component>
-    </>
+    </div>
   )
 }
 
