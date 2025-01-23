@@ -4,7 +4,7 @@ import {useState} from 'react'
 
 import {Badge} from '@codegouvfr/react-dsfr/Badge'
 import {createModal} from '@codegouvfr/react-dsfr/Modal'
-import {DataGrid} from '@mui/x-data-grid'
+import {DataGrid, GridToolbar} from '@mui/x-data-grid'
 import {frFR} from '@mui/x-data-grid/locales'
 import {format} from 'date-fns'
 
@@ -79,6 +79,7 @@ const DossiersList = ({dossiers}) => {
     <div className='flex h-[calc(100%+1px)]'>
       <DataGrid
         disableRowSelectionOnClick
+        slots={{toolbar: GridToolbar}}
         localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
         rows={dossiers.map(d => convertDossierToRow(d))}
         columns={[
