@@ -1,7 +1,7 @@
 import {Alert} from '@codegouvfr/react-dsfr/Alert'
 
 import {getDossiers} from '@/app/api/dossiers.js'
-import DossiersList from '@/components/dossiers-errors/dossiers-list.js'
+import DossiersList from '@/components/dossiers-list.js'
 
 const Home = async () => {
   let dossiers = []

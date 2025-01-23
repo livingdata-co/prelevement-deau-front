@@ -8,7 +8,7 @@ import {DataGrid} from '@mui/x-data-grid'
 import {frFR} from '@mui/x-data-grid/locales'
 import {format} from 'date-fns'
 
-import InvalidDossierModal from './invalid-dossier-modal.js'
+import InvalidDossierModal from './dossiers-errors/invalid-dossier-modal.js'
 
 const modal = createModal({
   id: 'invalid-dossiers-modal',
@@ -64,12 +64,14 @@ function renderDateCell(value) {
   return value ? format(new Date(value), 'dd/MM/yyyy') : '-'
 }
 
-const InvalidDossiersList = ({dossiers}) => {
+const DossiersList = ({dossiers}) => {
   const [selectedDossier, setSelectedDossier] = useState(null)
 
   const openModal = dossier => {
-    setSelectedDossier(dossier)
-    modal.open()
+    if (dossier.errorsCount > 0) {
+      setSelectedDossier(dossier)
+      modal.open()
+    }
   }
 
   return (
@@ -157,4 +159,4 @@ const InvalidDossiersList = ({dossiers}) => {
   )
 }
 
-export default InvalidDossiersList
+export default DossiersList
