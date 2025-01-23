@@ -31,7 +31,7 @@ function renderPrelevementType({value}) {
     'Prélèvement AEP ou en ZRE': {severity: 'new', label: 'Prélèvement AEP ou en ZRE'},
     'Prélèvement ICPE hors ZRE': {severity: 'info', label: 'Prélèvement ICPE hors ZRE'},
     'Prélèvement par camion citerne': {severity: 'warning', label: 'Prélèvement par camion citerne'},
-    'Extrait de registre': {severity: 'success', label: 'Autre prélèvement (agricole, domestique...)'}
+    'Autre prélèvement (agricole, domestique...)': {severity: 'success', label: 'Extrait de registre'}
   }
 
   const label = labels[value]
@@ -84,6 +84,7 @@ const InvalidDossiersList = ({dossiers}) => {
             field: 'demandeur',
             headerName: 'Demandeur',
             width: 300,
+            sortComparator: (a, b) => a.nom.localeCompare(b.nom),
             valueFormatter: ({civilite, nom, prenom}) => `${civilite}. ${nom.toUpperCase()} ${prenom}`
           },
           {
