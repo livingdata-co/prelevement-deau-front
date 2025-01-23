@@ -141,7 +141,7 @@ const InvalidDossiersList = ({dossiers}) => {
             }
           },
           sorting: {
-            sortModel: [{field: 'dateDepot', sort: 'asc'}]
+            sortModel: [{field: 'dateDepot', sort: 'desc'}]
           }
         }}
         pageSizeOptions={[20, 50, 100]}
