@@ -28,10 +28,10 @@ const convertDossierToRow = dossier => ({
 
 function renderPrelevementType({value}) {
   const labels = {
-    'Prélèvement AEP ou en ZRE': {severity: 'new', label: 'Prélèvement AEP ou en ZRE'},
-    'Prélèvement ICPE hors ZRE': {severity: 'info', label: 'Prélèvement ICPE hors ZRE'},
-    'Prélèvement par camion citerne': {severity: 'warning', label: 'Prélèvement par camion citerne'},
-    'Autre prélèvement (agricole, domestique...)': {severity: 'success', label: 'Extrait de registre'}
+    'Prélèvement AEP ou en ZRE': {severity: 'new', label: 'AEP ou en ZRE'},
+    'Prélèvement ICPE hors ZRE': {severity: 'info', label: 'ICPE hors ZRE'},
+    'Prélèvement par camion citerne': {severity: 'warning', label: 'Camion citerne'},
+    'Autre prélèvement (agricole, domestique...)': {severity: 'success', label: 'Autre'}
   }
 
   const label = labels[value]
@@ -88,13 +88,13 @@ const DossiersList = ({dossiers}) => {
             headerName: 'Demandeur',
             width: 300,
             sortComparator: (a, b) => a.nom.localeCompare(b.nom),
-            valueFormatter: ({civilite, nom, prenom}) => `${civilite}. ${nom.toUpperCase()} ${prenom}`
+            valueFormatter: ({nom, prenom}) => `${nom.toUpperCase()} ${prenom}`
           },
           {
             field: 'prelevementType',
             headerName: 'Type de prélèvement',
             renderCell: renderPrelevementType,
-            width: 300,
+            width: 200,
             filterable: true,
             type: 'singleSelect',
             valueOptions: [

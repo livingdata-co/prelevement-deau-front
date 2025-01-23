@@ -13,7 +13,7 @@ const navigationItems = [
         linkProps: {
           href: '/'
         },
-        text: 'Dossier invalide'
+        text: 'Dossiers déposés'
       },
       {
         linkProps: {
