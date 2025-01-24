@@ -6,6 +6,7 @@ import {
 
 import {Badge} from '@codegouvfr/react-dsfr/Badge'
 import {Button} from '@codegouvfr/react-dsfr/Button'
+import {Person} from '@mui/icons-material'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
@@ -17,7 +18,6 @@ import {
   ListItemIcon,
   Box,
   CircularProgress,
-  Divider,
   Typography, Grid2 as Grid
 } from '@mui/material'
 
@@ -27,8 +27,9 @@ import FileValidationErrors from '@/components/demarches-simplifiees/file-valida
 import PrelevementTypeBadge from '@/components/demarches-simplifiees/prelevement-type-badge.js'
 
 const DemandeurDetails = ({nom, prenom}) => (
-  <Box className='mt-4'>
-    <Typography gutterBottom variant='h6'>
+  <Box className='mt-2'>
+    <Typography gutterBottom variant='h6' className='flex items-center gap-1'>
+      <Person />
       Demandeur
     </Typography>
     <Grid container spacing={2}>
@@ -53,13 +54,28 @@ const DemandeurDetails = ({nom, prenom}) => (
   </Box>
 )
 
-const InvalidDossierModal = ({selectedDossier}) => {
+const DossierInfo = ({dateDepot, prelevementType, state}) => (
+  <Box className='flex justify-between mt-2'>
+    <Box className='flex flex-wrap gap-2'>
+      <Typography variant='body1' color='text.secondary'>
+        <strong>Date de dépôt:</strong>
+      </Typography>
+      <Typography variant='body1'>
+        {new Intl.DateTimeFormat('fr-FR', {dateStyle: 'short'}).format(new Date(dateDepot))}
+      </Typography>
+    </Box>
+
+    <Box className='flex gap-2 mb-2'>
+      <DossierStateBadge value={state} />
+      <PrelevementTypeBadge value={prelevementType} />
+    </Box>
+  </Box>
+)
+
+const DossierModal = ({selectedDossier}) => {
   const [openFiles, setOpenFiles] = useState({})
   const [isLoading, setIsLoading] = useState(true)
   const [files, setFiles] = useState([])
-
-  const {state, prelevementType, dateDepot, demandeur} = selectedDossier
-  const date = new Intl.DateTimeFormat('fr-FR', {dateStyle: 'short'}).format(new Date(dateDepot))
 
   useEffect(() => {
     async function fetchDossier() {
@@ -91,20 +107,8 @@ const InvalidDossierModal = ({selectedDossier}) => {
 
   return (
     <Box>
-      <Box className='flex justify-between items-center'>
-        <Box className='flex flex-wrap gap-2'>
-          <Typography variant='body1' color='text.secondary'>
-            <strong>Date de dépôt:</strong>
-          </Typography>
-          <Typography variant='body1'>{date}</Typography>
-        </Box>
-
-        <Box className='flex gap-2 mb-2'>
-          <DossierStateBadge value={state} />
-          <PrelevementTypeBadge value={prelevementType} />
-        </Box>
-      </Box>
-      <DemandeurDetails {...demandeur} />
+      <DossierInfo {...selectedDossier} />
+      <DemandeurDetails {...selectedDossier.demandeur} />
 
       {isLoading && (
         <Box container>
@@ -114,12 +118,10 @@ const InvalidDossierModal = ({selectedDossier}) => {
 
       {selectedDossier.errorsCount > 0 && files.length > 0 && (
         <Box className='mt-8'>
-          <Divider textAlign='left'>
-            <Typography variant='h6'>
-              <ErrorOutlineIcon color='error' className='mr-1' />
-              Erreurs
-            </Typography>
-          </Divider>
+          <Typography variant='h6'>
+            <ErrorOutlineIcon color='error' className='mr-1' />
+            Erreurs
+          </Typography>
           <List>
             {files.map(
               ({filename, errors, checksum}) => {
@@ -168,4 +170,4 @@ const InvalidDossierModal = ({selectedDossier}) => {
   )
 }
 
-export default InvalidDossierModal
+export default DossierModal
