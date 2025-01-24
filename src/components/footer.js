@@ -1,4 +1,5 @@
 'use client'
+
 import {Footer as DSFRFooter} from '@codegouvfr/react-dsfr/Footer'
 
 const FooterComponent = () => (
@@ -12,11 +13,6 @@ const FooterComponent = () => (
       Retrouvez toutes les informations et démarches administratives nécessaires à la création,
       à la gestion et au développement de votre entreprise.
       '
-    operatorLogo={{
-      alt: '[À MODIFIER - texte alternatif de l’image]',
-      imgUrl: 'static/media/placeholder.9x16.bb7c62f0.png',
-      orientation: 'vertical'
-    }}
   />
 )
 
