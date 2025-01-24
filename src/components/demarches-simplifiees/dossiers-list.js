@@ -52,7 +52,6 @@ const DossiersList = ({dossiers}) => {
   }
 
   return (
-    // On ajoute 1px pour compenser le débordement provoqué par la bordure du header et supprimer la seconde scrollbar.
     <div className='flex'>
       <DataGrid
         disableRowSelectionOnClick
@@ -60,8 +59,8 @@ const DossiersList = ({dossiers}) => {
         localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
         rows={dossiers.map(d => convertDossierToRow(d))}
         sx={{
-          '& .MuiDataGrid-columnHeaders': {
-            height: 'calc(100% - 2px)'
+          '& .MuiDataGrid-virtualScroller': {
+            overflowY: 'hidden'
           }
         }}
         columns={[

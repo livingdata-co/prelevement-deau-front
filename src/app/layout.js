@@ -31,13 +31,11 @@ const RootLayout = async ({children}) => {
       <body>
         <DsfrProvider lang={lang}>
           <MuiDsfrThemeProvider>
-            <div className='flex flex-col h-full'>
-              <Header user={session?.user} />
-              <main className='fr-pt-md-4v' role='main' id='content'>
-                {children}
-              </main>
-              <Footer />
-            </div>
+            <Header user={session?.user} />
+            <main className='fr-pt-md-4v' role='main' id='content'>
+              {children}
+            </main>
+            <Footer />
           </MuiDsfrThemeProvider>
         </DsfrProvider>
       </body>
