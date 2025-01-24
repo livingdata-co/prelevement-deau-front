@@ -8,7 +8,7 @@ import {DataGrid, GridToolbar} from '@mui/x-data-grid'
 import {frFR} from '@mui/x-data-grid/locales'
 import {format} from 'date-fns'
 
-import InvalidDossierModal from '@/components/demarches-simplifiees/dossier-modal.js'
+import DossierModal from '@/components/demarches-simplifiees/dossier-modal.js'
 import DossierStateBadge from '@/components/demarches-simplifiees/dossier-state-badge.js'
 import PrelevementTypeBadge from '@/components/demarches-simplifiees/prelevement-type-badge.js'
 import {getDossierDSURL} from '@/lib/url.js'
@@ -143,7 +143,7 @@ const DossiersList = ({dossiers}) => {
         ] : []}
       >
         {selectedDossier && (
-          <InvalidDossierModal selectedDossier={selectedDossier} />
+          <DossierModal selectedDossier={selectedDossier} />
         )}
       </modal.Component>
     </div>
