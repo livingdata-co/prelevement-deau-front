@@ -1,4 +1,4 @@
-import FileValidateurForm from '@/components/validateur/form.js'
+import FileValidateurForm from '@/components/demarches-simplifiees/validateur/form.js'
 
 const Validateur = async () => (
   <FileValidateurForm />

@@ -8,7 +8,10 @@ import {DataGrid, GridToolbar} from '@mui/x-data-grid'
 import {frFR} from '@mui/x-data-grid/locales'
 import {format} from 'date-fns'
 
-import InvalidDossierModal from './dossiers-errors/invalid-dossier-modal.js'
+import InvalidDossierModal from '@/components/demarches-simplifiees/dossier-modal.js'
+import DossierStateBadge from '@/components/demarches-simplifiees/dossier-state-badge.js'
+import PrelevementTypeBadge from '@/components/demarches-simplifiees/prelevement-type-badge.js'
+import {getDossierDSURL} from '@/lib/url.js'
 
 const modal = createModal({
   id: 'invalid-dossiers-modal',
@@ -25,30 +28,6 @@ const convertDossierToRow = dossier => ({
   prelevementType: dossier.prelevementType,
   demandeur: dossier.demandeur
 })
-
-function renderPrelevementType({value}) {
-  const labels = {
-    'Prélèvement AEP ou en ZRE': {severity: 'new', label: 'AEP ou en ZRE'},
-    'Prélèvement ICPE hors ZRE': {severity: 'info', label: 'ICPE hors ZRE'},
-    'Prélèvement par camion citerne': {severity: 'warning', label: 'Camion citerne'},
-    'Autre prélèvement (agricole, domestique...)': {severity: 'success', label: 'Autre'}
-  }
-
-  const label = labels[value]
-  return <Badge noIcon severity={label?.severity}>{label?.label}</Badge>
-}
-
-function renderDossierState({value}) {
-  const labels = {
-    accepte: {severity: 'success', label: 'Accepté'},
-    refuse: {severity: 'error', label: 'Refusé'},
-    en_construction: {severity: null, label: 'En construction'}, // eslint-disable-line camelcase
-    en_instruction: {severity: 'info', label: 'En instruction'}, // eslint-disable-line camelcase
-    sans_suite: {severity: 'warning', label: 'Sans suite'} // eslint-disable-line camelcase
-  }
-  const label = labels[value]
-  return <Badge severity={label?.severity}>{label?.label}</Badge>
-}
 
 function renderErrorsCount({field, row}) {
   const value = row[field]
@@ -68,20 +47,23 @@ const DossiersList = ({dossiers}) => {
   const [selectedDossier, setSelectedDossier] = useState(null)
 
   const openModal = dossier => {
-    if (dossier.errorsCount > 0) {
-      setSelectedDossier(dossier)
-      modal.open()
-    }
+    setSelectedDossier(dossier)
+    modal.open()
   }
 
   return (
     // On ajoute 1px pour compenser le débordement provoqué par la bordure du header et supprimer la seconde scrollbar.
-    <div className='flex h-[calc(100%+1px)]'>
+    <div className='flex'>
       <DataGrid
         disableRowSelectionOnClick
         slots={{toolbar: GridToolbar}}
         localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
         rows={dossiers.map(d => convertDossierToRow(d))}
+        sx={{
+          '& .MuiDataGrid-columnHeaders': {
+            height: 'calc(100% - 2px)'
+          }
+        }}
         columns={[
           {field: 'number', headerName: 'Numéro'},
           {
@@ -94,7 +76,7 @@ const DossiersList = ({dossiers}) => {
           {
             field: 'prelevementType',
             headerName: 'Type de prélèvement',
-            renderCell: renderPrelevementType,
+            renderCell: PrelevementTypeBadge,
             width: 200,
             filterable: true,
             type: 'singleSelect',
@@ -108,7 +90,7 @@ const DossiersList = ({dossiers}) => {
           {
             field: 'state',
             headerName: 'État',
-            renderCell: renderDossierState,
+            renderCell: DossierStateBadge,
             width: 180,
             filterable: true,
             type: 'singleSelect',
@@ -151,7 +133,16 @@ const DossiersList = ({dossiers}) => {
         onRowClick={row => openModal(row.row)}
       />
 
-      <modal.Component title='Erreurs du dossier'>
+      <modal.Component
+        title={`Dossier n°${selectedDossier?.number}`}
+        buttons={selectedDossier ? [
+          {
+            linkProps: {href: getDossierDSURL(selectedDossier), target: '_blank'},
+            doClosesModal: false, // Default true, clicking a button close the modal.
+            children: 'Consulter le dossier'
+          }
+        ] : []}
+      >
         {selectedDossier && (
           <InvalidDossierModal selectedDossier={selectedDossier} />
         )}

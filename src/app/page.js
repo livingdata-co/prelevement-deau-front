@@ -1,7 +1,8 @@
 import {Alert} from '@codegouvfr/react-dsfr/Alert'
+import {CallOut} from '@codegouvfr/react-dsfr/CallOut'
 
 import {getDossiers} from '@/app/api/dossiers.js'
-import DossiersList from '@/components/dossiers-list.js'
+import DossiersList from '@/components/demarches-simplifiees/dossiers-list.js'
 
 const Home = async () => {
   let dossiers = []
@@ -16,6 +17,13 @@ const Home = async () => {
 
   return (
     <div className='fr-container'>
+      <CallOut
+        iconId='ri-information-line'
+        title='Dossiers déposés'
+      >
+        Consultez, filtrez et triez les dossiers déposés par les préleveurs d’eau. Identifiez rapidement les erreurs éventuelles dans les données et accédez à leur détail pour un suivi précis.
+      </CallOut>
+
       {error ? (
         <Alert
           closable
