@@ -2,6 +2,7 @@ import MuiDsfrThemeProvider from '@codegouvfr/react-dsfr/mui'
 import {DsfrHead} from '@codegouvfr/react-dsfr/next-appdir/DsfrHead'
 import {DsfrProvider} from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider'
 import {getHtmlAttributes} from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes'
+import {AppRouterCacheProvider} from '@mui/material-nextjs/v13-appRouter'
 import Link from 'next/link'
 import {getServerSession} from 'next-auth'
 
@@ -19,25 +20,39 @@ export const metadata = {
 }
 
 const RootLayout = async ({children}) => {
-  const lang = 'fr'
   const session = await getServerSession()
 
   return (
-    <html {...getHtmlAttributes({defaultColorScheme, lang})} >
+    <html {...getHtmlAttributes({defaultColorScheme})} >
       <head>
         <StartDsfr />
-        <DsfrHead Link={Link} />
+        <DsfrHead Link={Link}
+          preloadFonts={[
+            // "Marianne-Light",
+            // "Marianne-Light_Italic",
+            'Marianne-Regular',
+            // "Marianne-Regular_Italic",
+            'Marianne-Medium',
+            // "Marianne-Medium_Italic",
+            'Marianne-Bold'
+            // "Marianne-Bold_Italic",
+            // "Spectral-Regular",
+            // "Spectral-ExtraBold"
+          ]}
+        />
       </head>
       <body>
-        <DsfrProvider lang={lang}>
-          <MuiDsfrThemeProvider>
-            <Header user={session?.user} />
-            <main className='fr-pt-md-4v' role='main' id='content'>
-              {children}
-            </main>
-            <Footer />
-          </MuiDsfrThemeProvider>
-        </DsfrProvider>
+        <AppRouterCacheProvider>
+          <DsfrProvider>
+            <MuiDsfrThemeProvider>
+              <Header user={session?.user} />
+              <main className='fr-pt-md-4v' role='main' id='content'>
+                {children}
+              </main>
+              <Footer />
+            </MuiDsfrThemeProvider>
+          </DsfrProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   )
