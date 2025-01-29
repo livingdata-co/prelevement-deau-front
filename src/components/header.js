@@ -64,17 +64,10 @@ const HeaderComponent = ({user}) => {
       serviceTitle='Prélèvement d’eau'
       homeLinkProps={{
         href: '/',
-        title: 'Accueil - Nom de l’entité (ministère, secrétariat d’état, gouvernement)'
+        title: 'Accueil - Prélèvement d’eau'
       }}
       quickAccessItems={[
         headerFooterDisplayItem,
-        {
-          iconId: 'fr-icon-mail-fill',
-          linkProps: {
-            href: 'mailto:contact@code.gouv.fr'
-          },
-          text: 'Nous contacter'
-        },
         user ? <LoginHeaderItem key={0} /> : null
       ]}
       navigation={
