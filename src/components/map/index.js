@@ -117,7 +117,9 @@ const Map = ({points, handleSelectedPoint}) => {
       const popupContainer = document.createElement('div')
       const root = createRoot(popupContainer)
 
-      root.render(<Popup properties={properties} />)
+      const hoveredPoint = points.find(point => point.id_point === properties.id_point)
+
+      root.render(<Popup point={hoveredPoint} />)
 
       mapPopup.setLngLat(coordinates)
         .setDOMContent(popupContainer)
