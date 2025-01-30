@@ -27,7 +27,11 @@ const Layout = ({points}) => {
       handleOpen={setExpanded}
       panelContent={<SidePanel point={selectedPoint} />}
     >
-      <Map points={points} handleSelectedPoint={handleSelectedPoint} />
+      <Map
+        points={points}
+        selectedPoint={selectedPoint}
+        handleSelectedPoint={handleSelectedPoint}
+      />
     </SidePanelLayout>
   )
 }

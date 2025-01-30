@@ -13,10 +13,28 @@ import Legend from './legend.js'
 import Popup from './popup.js'
 import vector from './styles/vector.json'
 
-const Map = ({points, handleSelectedPoint}) => {
+const activeLayers = ['points-prelevement-usages', 'points-prelevement-milieux']
+
+function highlightPoint(map, layerId, pointId) {
+  map.setPaintProperty(layerId, 'circle-stroke-color', [
+    'case',
+    ['==', ['get', 'id_point'], pointId],
+    'hotpink',
+    'black'
+  ])
+
+  map.setPaintProperty(layerId, 'circle-stroke-width', [
+    'case',
+    ['==', ['get', 'id_point'], pointId],
+    3,
+    1
+  ])
+}
+
+const Map = ({points, selectedPoint, handleSelectedPoint}) => {
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
-  const [legend, setLegend] = useState('typesMilieu')
+  const [legend, setLegend] = useState('milieux')
   const [filters, setFilters] = useState([])
 
   const handleFilters = e => {
@@ -38,6 +56,10 @@ const Map = ({points, handleSelectedPoint}) => {
       } else {
         mapRef.current.setLayoutProperty('points-prelevement-usages', 'visibility', 'none')
         mapRef.current.setLayoutProperty('points-prelevement-milieux', 'visibility', 'visible')
+      }
+
+      if (selectedPoint) {
+        highlightPoint(mapRef.current, `points-prelevement-${newLegend}`, selectedPoint.id_point)
       }
     }
 
@@ -67,48 +89,7 @@ const Map = ({points, handleSelectedPoint}) => {
 
     mapRef.current = map
 
-    map.on('mouseenter', 'points-prelevement-usages', e => {
-      map.getCanvas().style.cursor = 'pointer'
-
-      const coordinates = [...e.features[0].geometry.coordinates]
-      const {properties} = e.features[0]
-
-      const popupContainer = document.createElement('div')
-      const root = createRoot(popupContainer)
-
-      root.render(<Popup properties={properties} />)
-
-      mapPopup.setLngLat(coordinates)
-        .setDOMContent(popupContainer)
-        .addTo(map)
-    })
-
-    map.on('mouseleave', 'points-prelevement-usages', () => {
-      map.getCanvas().style.cursor = ''
-      mapPopup.remove()
-    })
-
-    map.on('click', 'points-prelevement-usages', e => {
-      const {properties} = e.features[0]
-
-      map.setPaintProperty('points-prelevement-usages', 'circle-stroke-color', [
-        'case',
-        ['==', ['get', 'id_point'], properties.id_point],
-        'hotpink',
-        'black'
-      ])
-
-      map.setPaintProperty('points-prelevement-usages', 'circle-stroke-width', [
-        'case',
-        ['==', ['get', 'id_point'], properties.id_point],
-        3,
-        1
-      ])
-
-      handleSelectedPoint(properties.id_point)
-    })
-
-    map.on('mouseenter', 'points-prelevement-milieux', e => {
+    map.on('mouseenter', activeLayers, e => {
       map.getCanvas().style.cursor = 'pointer'
 
       const coordinates = [...e.features[0].geometry.coordinates]
@@ -126,28 +107,15 @@ const Map = ({points, handleSelectedPoint}) => {
         .addTo(map)
     })
 
-    map.on('mouseleave', 'points-prelevement-milieux', () => {
+    map.on('mouseleave', activeLayers, () => {
       map.getCanvas().style.cursor = ''
       mapPopup.remove()
     })
 
-    map.on('click', 'points-prelevement-milieux', e => {
-      const {properties} = e.features[0]
+    map.on('click', activeLayers, e => {
+      const {properties, layer} = e.features[0]
 
-      map.setPaintProperty('points-prelevement-milieux', 'circle-stroke-color', [
-        'case',
-        ['==', ['get', 'id_point'], properties.id_point],
-        'hotpink',
-        'black'
-      ])
-
-      map.setPaintProperty('points-prelevement-milieux', 'circle-stroke-width', [
-        'case',
-        ['==', ['get', 'id_point'], properties.id_point],
-        3,
-        1
-      ])
-
+      highlightPoint(map, layer.id, properties.id_point)
       handleSelectedPoint(properties.id_point)
     })
 
@@ -208,7 +176,7 @@ const Map = ({points, handleSelectedPoint}) => {
         }}
       >
         <Select value={legend} variant='outlined' size='small' onChange={handleLegendChange}>
-          <MenuItem value='typesMilieu'>Types de milieu</MenuItem>
+          <MenuItem value='milieux'>Types de milieu</MenuItem>
           <MenuItem value='usages'>Usages</MenuItem>
         </Select>
         <Legend

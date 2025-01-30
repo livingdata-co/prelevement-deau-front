@@ -40,7 +40,7 @@ const Legend = ({legend, activeFilters, setFilters}) => {
           ))
         )}
 
-        {legend === 'typesMilieu' && (
+        {legend === 'milieux' && (
           typesMilieu.map(type => (
             <Bubble
               key={type.text}
