@@ -21,6 +21,7 @@
     "@mui/system": "^6.4.1",
     "@mui/x-data-grid": "^7.22.0",
     "date-fns": "^4.1.0",
+    "maplibre-gl": "^5.0.1",
     "next": "^15.0.2",
     "next-auth": "^4.24.10",
     "react": "^18.3.1",
@@ -30,6 +31,7 @@
   },
   "devDependencies": {
     "@types/node": "22.8.1",
+    "@types/react": "19.0.8",
     "eslint": "^8",
     "eslint-config-next": "15.0.1",
     "eslint-config-xo": "^0.46.0",
