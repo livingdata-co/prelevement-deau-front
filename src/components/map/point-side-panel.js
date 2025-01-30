@@ -9,7 +9,9 @@ import {
   List,
   ListItem,
   ListItemIcon,
-  ListItemText
+  ListItemText,
+  AlertTitle,
+  Alert
 } from '@mui/material'
 
 import ExploitationAccordion from '../exploitation-accordion.js'
@@ -74,6 +76,13 @@ const SidePanel = ({point}) => {
         <Typography variant='caption'>
           {formatAutresNoms(point.autres_noms)}
         </Typography>
+      )}
+
+      {point.remarque && (
+        <Alert severity='info'>
+          <AlertTitle>Remarque</AlertTitle>
+          {point.remarque}
+        </Alert>
       )}
 
       <Box className='mt-2 p-2' sx={{
