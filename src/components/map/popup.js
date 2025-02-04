@@ -1,5 +1,10 @@
 import {Person, WaterDropOutlined} from '@mui/icons-material'
-import {Box, Chip, Typography} from '@mui/material'
+import {
+  Box,
+  Chip,
+  Typography,
+  useTheme
+} from '@mui/material'
 import {format} from 'date-fns'
 import {orderBy} from 'lodash-es'
 
@@ -13,12 +18,13 @@ const statuts = {
 }
 
 const Popup = ({point}) => {
+  const theme = useTheme()
   const {nom, autres_noms: autresNoms, beneficiaires, exploitations, usages, typeMilieu, zre, reservoir_biologique: reservoirBiologique} = point
   const orderedExploitations = orderBy(exploitations, 'date_debut')
 
   return (
-    <Box className='flex flex-col gap-2'>
-      <Typography variant='h6'>
+    <Box className='flex flex-col gap-2' sx={{color: theme.palette.text.primary}}>
+      <Typography variant='h6' sx={{color: theme.palette.text.primary}}>
         {point.id_point} - {nom || 'Pas de nom renseigné'}
       </Typography>
 
