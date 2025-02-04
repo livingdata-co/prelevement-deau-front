@@ -1,6 +1,8 @@
 'use client'
 
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {
+  useCallback, useEffect, useMemo, useState
+} from 'react'
 
 import {Box} from '@mui/material'
 
