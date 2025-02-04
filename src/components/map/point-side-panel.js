@@ -84,7 +84,7 @@ const SidePanel = ({point}) => {
         <SectionTitle title='Informations Principales' />
 
         <Typography>
-          <strong>Usage :</strong> {point.usage}
+          <strong>Usages :</strong> {point.usages.join(', ')}
         </Typography>
         <Typography>
           <strong>Type de milieu :</strong> {point.typeMilieu}
@@ -108,12 +108,12 @@ const SidePanel = ({point}) => {
         </Typography>
       </Box>
 
-      {/* 2. Bénéficiaires (pas d'Accordion + icône Person) */}
+      {/* 2. Préleveurs (pas d'Accordion + icône Person) */}
       <Box className='p-2' sx={{
         backgroundColor: fr.colors.decisions.background.alt.grey.default
       }}
       >
-        <SectionTitle title='Bénéficiaires' />
+        <SectionTitle title='Préleveurs' />
 
         <Box sx={{ml: 2}}>
           {point.beneficiaires && point.beneficiaires.length > 0 ? (
@@ -147,10 +147,10 @@ const SidePanel = ({point}) => {
       >
         <SectionTitle title='Historique des Exploitations' />
 
-        {(!point.exploitation || point.exploitation.length === 0) && (
+        {(!point.exploitations || point.exploitations.length === 0) && (
           <Typography sx={{ml: 2}}>Aucune exploitation.</Typography>
         )}
-        {point.exploitation && point.exploitation.map(exploitation => (
+        {point.exploitations && point.exploitations.map(exploitation => (
           <ExploitationAccordion
             key={exploitation.id_exploitation}
             exploitation={exploitation}
