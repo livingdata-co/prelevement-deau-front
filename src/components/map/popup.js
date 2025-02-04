@@ -17,21 +17,29 @@ const Popup = ({point}) => {
 
       <Box>
         {beneficiaires.length > 0 ? (
-          <Box className='flex items-center gap-1'>
-            <Person /> {beneficiaires.length} bénéficiaire{beneficiaires.length > 1 ? 's' : ''}
-          </Box>
+          beneficiaires.length < 4 ? (
+            beneficiaires.map(beneficiaire => (
+              <Box key={beneficiaire.id_beneficiaire} className='flex items-center gap-1'>
+                <Person /> {beneficiaire?.raison_sociale || beneficiaire?.sigle || beneficiaire?.nom}
+              </Box>
+            ))
+          ) : (
+            <Box className='flex items-center gap-1'>
+              <Person /> {beneficiaires.length} préleveurs
+            </Box>
+          )
         ) : (
-          <Typography variant='caption'>Aucun bénéficiaire</Typography>
+          <Typography variant='caption'>Aucun préleveur</Typography>
         )}
       </Box>
 
       <Box>
         {exploitations.length > 0 ? (
           <Box className='flex items-center gap-1'>
-            <WaterDropOutlined /> {exploitations.length} exploitations{exploitations.length > 1 ? 's' : ''}
+            <WaterDropOutlined /> {exploitations.length} exploitation{exploitations.length > 1 ? 's' : ''}
           </Box>
         ) : (
-          <Typography variant='caption'>Aucun bénéficiaire</Typography>
+          <Typography variant='caption'>Aucune exploitation</Typography>
         )}
       </Box>
 
