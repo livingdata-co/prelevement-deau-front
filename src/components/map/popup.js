@@ -3,6 +3,13 @@ import {Box, Chip, Typography} from '@mui/material'
 
 import {formatAutresNoms} from '@/lib/points-prelevement.js'
 
+const statuts = {
+  1: 'En activité',
+  2: 'Terminée',
+  3: 'Abandonnée',
+  4: 'Non renseigné'
+}
+
 const Popup = ({point}) => {
   const {nom, autres_noms: autresNoms, beneficiaires, exploitations, usages, typeMilieu} = point
   return (
@@ -34,12 +41,10 @@ const Popup = ({point}) => {
       </Box>
 
       <Box>
-        {exploitations.length > 0 ? (
+        {exploitations.length > 0 && (
           <Box className='flex items-center gap-1'>
-            <WaterDropOutlined /> {exploitations.length} exploitation{exploitations.length > 1 ? 's' : ''}
+            <WaterDropOutlined /> {statuts[exploitations.at(-1).statut]}
           </Box>
-        ) : (
-          <Typography variant='caption'>Aucune exploitation</Typography>
         )}
       </Box>
 
