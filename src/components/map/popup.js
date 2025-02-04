@@ -1,5 +1,7 @@
 import {Person, WaterDropOutlined} from '@mui/icons-material'
 import {Box, Chip, Typography} from '@mui/material'
+import {format} from 'date-fns'
+import {orderBy} from 'lodash-es'
 
 import {formatAutresNoms} from '@/lib/points-prelevement.js'
 
@@ -12,6 +14,8 @@ const statuts = {
 
 const Popup = ({point}) => {
   const {nom, autres_noms: autresNoms, beneficiaires, exploitations, usages, typeMilieu} = point
+  const orderedExploitations = orderBy(exploitations, 'date_debut')
+
   return (
     <Box className='flex flex-col gap-2'>
       <Typography variant='h6'>
@@ -41,10 +45,15 @@ const Popup = ({point}) => {
       </Box>
 
       <Box>
-        {exploitations.length > 0 && (
-          <Box className='flex items-center gap-1'>
-            <WaterDropOutlined /> {statuts[exploitations.at(-1).statut]}
-          </Box>
+        {orderedExploitations.length > 0 && (
+          <>
+            <Box className='flex items-center gap-1'>
+              <WaterDropOutlined /> {statuts[orderedExploitations.at(-1).statut]}
+            </Box>
+            <Box className='flex items-center gap-1'>
+              Exploité depuis le {format(orderedExploitations[0].date_debut, 'dd/MM/yyyy')}
+            </Box>
+          </>
         )}
       </Box>
 
