@@ -13,7 +13,7 @@ const statuts = {
 }
 
 const Popup = ({point}) => {
-  const {nom, autres_noms: autresNoms, beneficiaires, exploitations, usages, typeMilieu} = point
+  const {nom, autres_noms: autresNoms, beneficiaires, exploitations, usages, typeMilieu, zre, reservoir_biologique: reservoirBiologique} = point
   const orderedExploitations = orderBy(exploitations, 'date_debut')
 
   return (
@@ -52,6 +52,11 @@ const Popup = ({point}) => {
             </Box>
             <Box className='flex items-center gap-1'>
               Exploité depuis le {format(orderedExploitations[0].date_debut, 'dd/MM/yyyy')}
+            </Box>
+            <Box>
+              Zonage réglementaire : <Typography variant='caption' display='inline'>
+                {zre === 't' ? 'Zone de répartition des eaux' : (reservoirBiologique === 't' ? 'Réservoir biologique' : ' - ')}
+              </Typography>
             </Box>
           </>
         )}
