@@ -1,8 +1,6 @@
 'use client'
 
-import {
-  useCallback, useEffect, useMemo, useState
-} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 
 import {Box} from '@mui/material'
 
@@ -12,6 +10,7 @@ import LoadingOverlay from '@/components/loading-overlay.js'
 import Map from '@/components/map/index.js'
 import MapFilters from '@/components/map/map-filters.js'
 import SidePanel from '@/components/map/point-side-panel.js'
+import useEvent from '@/hook/use-event.js'
 import {extractTypeMilieu, extractUsages} from '@/lib/points-prelevement.js'
 
 const Page = () => {
@@ -54,11 +53,12 @@ const Page = () => {
   }, [points])
 
   // Gestion de la sélection d'un point sur la carte
-  const handleSelectedPoint = useCallback(pointId => {
+  const handleSelectedPoint = useEvent(pointId => {
+    // On recherche dans le state actuel
     const point = points.find(p => p.id_point === pointId)
     setSelectedPoint(point)
     setExpanded(true)
-  }, [points])
+  })
 
   // Mise à jour des points filtrés en fonction des filtres
   useEffect(() => {
