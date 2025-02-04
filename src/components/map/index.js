@@ -34,6 +34,14 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint}) => {
   const mapRef = useRef(null)
   const popupRef = useRef(null)
 
+  // 1. On crée une ref pour stocker la valeur actuelle de `points`
+  const pointsRef = useRef(points)
+
+  // 2. À chaque fois que la prop `points` change, on met à jour la ref
+  useEffect(() => {
+    pointsRef.current = points
+  }, [points])
+
   /**
    * Cache des markers :
    *  - clé : id unique (cluster_id ou id_point)
@@ -164,7 +172,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint}) => {
             map.getCanvas().style.cursor = 'pointer'
             const popupContainer = document.createElement('div')
             const root = createRoot(popupContainer)
-            const hoveredPoint = points.find(
+            const hoveredPoint = pointsRef.current.find(
               point => point.id_point === props.id_point
             )
             root.render(<Popup point={hoveredPoint} />)
@@ -218,7 +226,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint}) => {
     }
 
     markersOnScreenRef.current = newMarkers
-  }, [points, handleSelectedPoint])
+  }, [handleSelectedPoint])
 
   /**
    * À chaque changement de selectedPoint, on met à jour le style du layer
