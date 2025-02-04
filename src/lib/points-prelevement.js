@@ -4,7 +4,7 @@ export function formatAutresNoms(autresNoms) {
   }
 
   const cleanedStr = autresNoms.replaceAll(/[{}"]/g, '')
-  const result = [...new Set(cleanedStr.split(','))].join(', ')
+  const result = '(' + [...new Set(cleanedStr.split(','))].join(', ') + ')'
 
   return result
 }

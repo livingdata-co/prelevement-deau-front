@@ -12,7 +12,7 @@ const Popup = ({point}) => {
       </Typography>
 
       <Typography variant='caption'>
-        {autresNoms ? formatAutresNoms(autresNoms) : 'Pas de nom renseigné'}
+        {autresNoms && formatAutresNoms(autresNoms)}
       </Typography>
 
       <Box>
