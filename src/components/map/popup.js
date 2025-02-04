@@ -7,7 +7,9 @@ const Popup = ({point}) => {
   const {nom, autres_noms: autresNoms, beneficiaires, exploitations, usages, typeMilieu} = point
   return (
     <Box className='flex flex-col gap-2'>
-      <Typography variant='h6'>{nom || 'Pas de nom renseigné'}</Typography>
+      <Typography variant='h6'>
+        {point.id_point} - {nom || 'Pas de nom renseigné'}
+      </Typography>
 
       <Typography variant='caption'>
         {autresNoms ? formatAutresNoms(autresNoms) : 'Pas de nom renseigné'}
