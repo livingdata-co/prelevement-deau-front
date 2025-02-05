@@ -10,10 +10,11 @@ import {orderBy} from 'lodash-es'
 
 import {formatAutresNoms} from '@/lib/points-prelevement.js'
 
+// À enlever quand la PR #8 backend sera mergée
 const statuts = {
   1: 'En activité',
-  2: 'Terminée',
-  3: 'Abandonnée',
+  2: 'Terminé',
+  3: 'Abandonné',
   4: 'Non renseigné'
 }
 
@@ -21,6 +22,8 @@ const Popup = ({point}) => {
   const theme = useTheme()
   const {nom, autres_noms: autresNoms, beneficiaires, exploitations, usages, typeMilieu, zre, reservoir_biologique: reservoirBiologique} = point
   const orderedExploitations = orderBy(exploitations, 'date_debut')
+  const statutExploitation = orderedExploitations.at(-1).statut
+  const dateDebutExploitation = orderedExploitations[0].date_debut
 
   return (
     <Box className='flex flex-col gap-2' sx={{color: theme.palette.text.primary}}>
@@ -54,10 +57,10 @@ const Popup = ({point}) => {
         {orderedExploitations.length > 0 && (
           <>
             <Box className='flex items-center gap-1'>
-              <WaterDropOutlined /> {statuts[orderedExploitations.at(-1).statut]}
+              <WaterDropOutlined />Statut de l’exploitation : {statuts[statutExploitation]}
             </Box>
             <Box className='flex items-center gap-1'>
-              Exploité depuis le {format(orderedExploitations[0].date_debut, 'dd/MM/yyyy')}
+              Exploité depuis le {format(dateDebutExploitation, 'dd/MM/yyyy')}
             </Box>
             <Box>
               Zonage réglementaire : <Typography variant='caption' display='inline'>
