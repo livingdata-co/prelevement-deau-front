@@ -26,6 +26,7 @@ const Popup = ({point}) => {
   const dateDebutExploitation = orderedExploitations[0].date_debut
 
   return (
+    // TODO : Utiliser le theme DSFR
     <Box className='flex flex-col gap-2' sx={{color: theme.palette.text.primary}}>
       <Typography variant='h6' sx={{color: theme.palette.text.primary}}>
         {point.id_point} - {nom || 'Pas de nom renseigné'}
