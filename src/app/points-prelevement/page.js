@@ -2,7 +2,7 @@
 
 import {useEffect, useMemo, useState} from 'react'
 
-import {Box} from '@mui/material'
+import {Box, Select, MenuItem, FormControl, InputLabel} from '@mui/material'
 
 import {getPointsPrelevement} from '@/app/api/points-prelevement.js'
 import SidePanelLayout from '@/components/layout/side-panel.js'
@@ -27,6 +27,7 @@ const Page = () => {
     usages: []
   })
   const [filteredPoints, setFilteredPoints] = useState([])
+  const [style, setStyle] = useState('vector')
 
   // Récupération des données côté client via l'API
   useEffect(() => {
@@ -111,7 +112,39 @@ const Page = () => {
           filteredPoints={filteredPoints}
           selectedPoint={selectedPoint}
           handleSelectedPoint={handleSelectedPoint}
+          style={style}
+          setStyle={setStyle}
         />
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            backgroundColor: '#ffffff',
+            height: 70,
+            width: 300
+          }}
+        >
+          <FormControl
+            sx={{
+              m: 2,
+              position: 'absolute',
+              width: 270
+            }}
+            size='small'
+          >
+            <InputLabel>Style de la carte</InputLabel>
+            <Select
+              value={style}
+              label='Style de la carte'
+              onChange={e => setStyle(e.target.value)}
+            >
+              <MenuItem value='vector'>Plan OpenMapTiles</MenuItem>
+              <MenuItem value='plan-ign'>Plan IGN</MenuItem>
+              <MenuItem value='photo'>Photographie aérienne</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </Box>
     </SidePanelLayout>
   )
