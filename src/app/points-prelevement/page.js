@@ -2,7 +2,14 @@
 
 import {useEffect, useMemo, useState} from 'react'
 
-import {Box, Select, MenuItem, FormControl, InputLabel} from '@mui/material'
+import {
+  Box,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  useTheme
+} from '@mui/material'
 
 import {getPointsPrelevement} from '@/app/api/points-prelevement.js'
 import SidePanelLayout from '@/components/layout/side-panel.js'
@@ -14,6 +21,7 @@ import useEvent from '@/hook/use-event.js'
 import {extractTypeMilieu, extractUsages} from '@/lib/points-prelevement.js'
 
 const Page = () => {
+  const theme = useTheme()
   // État pour les données
   const [points, setPoints] = useState([])
   const [loading, setLoading] = useState(true)
@@ -120,7 +128,7 @@ const Page = () => {
             position: 'absolute',
             top: 0,
             left: 0,
-            backgroundColor: '#ffffff',
+            backgroundColor: theme.palette.background.default,
             height: 70,
             width: 300
           }}
