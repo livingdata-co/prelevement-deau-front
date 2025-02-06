@@ -107,7 +107,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
       container: mapContainerRef.current,
       style: styles[style],
       center: [55.55, -21.13],
-      zoom: 9,
+      zoom: 10,
       debug: true,
       attributionControl: {compact: true}
     })
