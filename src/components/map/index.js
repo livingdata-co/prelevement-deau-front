@@ -9,6 +9,8 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import {createRoot} from 'react-dom/client'
 
 import Popup from './popup.js'
+import photo from './styles/photo.json'
+import planIGN from './styles/plan-ign.json'
 import vector from './styles/vector.json'
 
 import {
@@ -21,6 +23,50 @@ import {
 } from '@/lib/points-prelevement.js'
 
 const SOURCE_ID = 'points-prelevement'
+const styles = {
+  photo,
+  'plan-ign': planIGN,
+  vector
+}
+
+function loadMap(map, points) {
+  // On ajoute la source en ne gardant que les points filtrés
+  map.addSource(SOURCE_ID, {
+    type: 'geojson',
+    data: createPointPrelevementFeatures(points),
+    cluster: true,
+    clusterRadius: 80,
+    clusterProperties: {
+      // Comptage pour chaque type d'environnement
+      eauSurface: ['+', ['case', eauSurface, 1, 0]],
+      eauSouterraine: ['+', ['case', eauSouterraine, 1, 0]]
+    }
+  })
+
+  // Layer combiné affichant le nom et le typeMilieu (entre parenthèses sur deux lignes)
+  map.addLayer({
+    id: 'points-prelevement-nom',
+    type: 'symbol',
+    source: SOURCE_ID,
+    filter: ['!=', 'cluster', true],
+    layout: {
+      'text-field': [
+        'concat',
+        ['get', 'nom'],
+        '\n(',
+        ['get', 'typeMilieu'],
+        ')'
+      ],
+      'text-anchor': 'bottom',
+      'text-offset': ['get', 'textOffset']
+    },
+    paint: {
+      'text-halo-color': '#fff',
+      'text-halo-width': 2,
+      'text-color': '#000'
+    }
+  })
+}
 
 /**
  * Props attendues :
@@ -28,8 +74,9 @@ const SOURCE_ID = 'points-prelevement'
  *  - filteredPoints : tableau d'id (point.id_point) correspondant aux points à afficher
  *  - selectedPoint : point sélectionné (objet ou null)
  *  - handleSelectedPoint : callback recevant l'id du point sélectionné
+ *  - style : style de la carte (photo, plan-ign, vector)
  */
-const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint}) => {
+const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}) => {
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
   const popupRef = useRef(null)
@@ -58,9 +105,9 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint}) => {
 
     const map = new maplibre.Map({
       container: mapContainerRef.current,
-      style: vector,
+      style: styles[style],
       center: [55.55, -21.13],
-      zoom: 9,
+      zoom: 10,
       debug: true,
       attributionControl: {compact: true}
     })
@@ -80,42 +127,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint}) => {
     mapRef.current = map
 
     map.on('load', async () => {
-      // On ajoute la source en ne gardant que les points filtrés
-      map.addSource(SOURCE_ID, {
-        type: 'geojson',
-        data: createPointPrelevementFeatures(points),
-        cluster: true,
-        clusterRadius: 80,
-        clusterProperties: {
-          // Comptage pour chaque type d'environnement
-          eauSurface: ['+', ['case', eauSurface, 1, 0]],
-          eauSouterraine: ['+', ['case', eauSouterraine, 1, 0]]
-        }
-      })
-
-      // Layer combiné affichant le nom et le typeMilieu (entre parenthèses sur deux lignes)
-      map.addLayer({
-        id: 'points-prelevement-nom',
-        type: 'symbol',
-        source: SOURCE_ID,
-        filter: ['!=', 'cluster', true],
-        layout: {
-          'text-field': [
-            'concat',
-            ['get', 'nom'],
-            '\n(',
-            ['get', 'typeMilieu'],
-            ')'
-          ],
-          'text-anchor': 'bottom',
-          'text-offset': ['get', 'textOffset']
-        },
-        paint: {
-          'text-halo-color': '#fff',
-          'text-halo-width': 2,
-          'text-color': '#000'
-        }
-      })
+      loadMap(map, points)
     })
 
     // À chaque fois que la source GeoJSON est chargée, on met à jour les markers.
@@ -266,6 +278,16 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint}) => {
       map.setPaintProperty('points-prelevement-nom', 'text-color', '#000')
     }
   }, [selectedPoint])
+
+  useEffect(() => {
+    if (mapRef.current && style && mapRef.current.isStyleLoaded()) {
+      mapRef.current.setStyle(styles[style])
+      loadMap(mapRef.current, points)
+      mapRef.current.on('render', () => {
+        updateMarkers()
+      })
+    }
+  }, [style, points, updateMarkers])
 
   return (
     <Box className='flex h-full w-full relative'>
