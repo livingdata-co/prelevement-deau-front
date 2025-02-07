@@ -10,14 +10,6 @@ import {orderBy} from 'lodash-es'
 
 import {formatAutresNoms} from '@/lib/points-prelevement.js'
 
-// À enlever quand la PR #8 backend sera mergée
-const statuts = {
-  1: 'En activité',
-  2: 'Terminé',
-  3: 'Abandonné',
-  4: 'Non renseigné'
-}
-
 const Popup = ({point}) => {
   const theme = useTheme()
   const {nom, autres_noms: autresNoms, beneficiaires, exploitations, usages, typeMilieu, zre, reservoir_biologique: reservoirBiologique} = point
@@ -58,14 +50,14 @@ const Popup = ({point}) => {
         {orderedExploitations.length > 0 && (
           <>
             <Box className='flex items-center gap-1'>
-              <WaterDropOutlined />Statut de l’exploitation : {statuts[statutExploitation]}
+              <WaterDropOutlined />Statut de l’exploitation : {statutExploitation || 'non renseigné'}
             </Box>
             <Box className='flex items-center gap-1'>
               Exploité depuis le {format(dateDebutExploitation, 'dd/MM/yyyy')}
             </Box>
             <Box>
               Zonage réglementaire : <Typography variant='caption' display='inline'>
-                {zre === 't' ? 'Zone de répartition des eaux' : (reservoirBiologique === 't' ? 'Réservoir biologique' : ' - ')}
+                {zre ? 'Zone de répartition des eaux' : (reservoirBiologique ? 'Réservoir biologique' : ' - ')}
               </Typography>
             </Box>
           </>
