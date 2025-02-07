@@ -150,6 +150,7 @@ const Page = () => {
               <MenuItem value='vector'>Plan OpenMapTiles</MenuItem>
               <MenuItem value='plan-ign'>Plan IGN</MenuItem>
               <MenuItem value='photo'>Photographie aérienne</MenuItem>
+              <MenuItem value='vector-ign'>IGN vectoriel</MenuItem>
             </Select>
           </FormControl>
         </Box>

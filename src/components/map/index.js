@@ -11,6 +11,7 @@ import {createRoot} from 'react-dom/client'
 import Popup from './popup.js'
 import photo from './styles/photo.json'
 import planIGN from './styles/plan-ign.json'
+import vectorIGN from './styles/vector-ign.json'
 import vector from './styles/vector.json'
 
 import {
@@ -26,7 +27,8 @@ const SOURCE_ID = 'points-prelevement'
 const styles = {
   photo,
   'plan-ign': planIGN,
-  vector
+  vector,
+  'vector-ign': vectorIGN
 }
 
 function loadMap(map, points) {
