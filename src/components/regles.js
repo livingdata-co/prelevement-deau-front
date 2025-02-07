@@ -3,7 +3,7 @@
 import {Box} from '@mui/material'
 import {DataGrid} from '@mui/x-data-grid'
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL
+const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL
 
 const reglesColumns = [
   {
