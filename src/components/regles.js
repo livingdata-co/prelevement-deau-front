@@ -3,6 +3,8 @@
 import {Box} from '@mui/material'
 import {DataGrid} from '@mui/x-data-grid'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL
+
 const reglesColumns = [
   {
     field: 'parametre',
@@ -31,7 +33,7 @@ const reglesColumns = [
     renderCell(params) {
       return (
         <a
-          href={`https://prelevementdeau-public.s3.fr-par.scw.cloud/document/${params.row.document.nom_fichier}`}
+          href={`${API_URL}/document/${params.row.document.nom_fichier}`}
           target='_blank'
           rel='noreferrer'
         >
