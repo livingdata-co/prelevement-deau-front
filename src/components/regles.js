@@ -3,31 +3,24 @@
 import {Box} from '@mui/material'
 import {DataGrid} from '@mui/x-data-grid'
 
+const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL
+
 const reglesColumns = [
   {
     field: 'parametre',
     headerName: 'Paramètre',
-    width: 200,
-    valueGetter(value) {
-      return parametres[value] || <i>Non renseigné</i>
-    }
+    width: 200
   },
   {field: 'valeur', headerName: 'Valeur', width: 90},
   {
     field: 'unite',
     headerName: 'Unité',
-    width: 80,
-    valueGetter(value) {
-      return unites[value] || <i>Non renseigné</i>
-    }
+    width: 80
   },
   {
     field: 'contrainte',
     headerName: 'Contrainte',
-    width: 100,
-    valueGetter(value) {
-      return contraintes[value] || <i>Non renseigné</i>
-    }
+    width: 100
   },
   {field: 'debut_periode', headerName: 'Début période', width: 110},
   {field: 'fin_periode', headerName: 'Fin période', width: 110},
@@ -40,7 +33,7 @@ const reglesColumns = [
     renderCell(params) {
       return (
         <a
-          href={`https://prelevementdeau-public.s3.fr-par.scw.cloud/document/${params.row.document.nom_fichier}`}
+          href={`${API_URL}/document/${params.row.document.nom_fichier}`}
           target='_blank'
           rel='noreferrer'
         >
@@ -51,38 +44,6 @@ const reglesColumns = [
   },
   {field: 'remarque', headerName: 'Remarque', width: 250}
 ]
-
-const unites = {
-  1: 'm3',
-  2: 'L/s',
-  3: 'm3/h',
-  4: 'mg/L',
-  5: 'degré Celsius',
-  6: 'm NGR',
-  7: 'µS/cm'
-}
-
-const contraintes = {
-  1: 'minimum',
-  2: 'maximum',
-  3: 'moyenne'
-}
-
-const parametres = {
-  1: 'Volume journalier',
-  2: 'Volume mensuel',
-  3: 'Volume annuel',
-  4: 'Relevé d’index',
-  5: 'Débit prélevé',
-  6: 'Débit réservé',
-  7: 'Chlorure',
-  8: 'Nitrates',
-  9: 'Sulfates',
-  10: 'Température',
-  11: 'Niveau piézométrique',
-  12: 'Conductivité électrique',
-  13: 'pH'
-}
 
 const Regles = ({regles}) => (
   <Box sx={{p: 2}}>
