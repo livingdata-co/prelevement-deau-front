@@ -35,7 +35,7 @@ const Page = () => {
     usages: []
   })
   const [filteredPoints, setFilteredPoints] = useState([])
-  const [style, setStyle] = useState('vector')
+  const [style, setStyle] = useState('plan-ign')
 
   // Récupération des données côté client via l'API
   useEffect(() => {
