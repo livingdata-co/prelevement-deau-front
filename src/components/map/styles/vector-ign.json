@@ -1,7 +1,7 @@
 {
   "version": 8,
   "name": "PLAN IGN",
-  "glyphs":"https://data.geopf.fr/annexes/ressources/vectorTiles/fonts/{fontstack}/{range}.pbf",
+  "glyphs": "https://openmaptiles.geo.data.gouv.fr/fonts/{fontstack}/{range}.pbf",
   "sprite": "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/sprite/PlanIgn",
   "sources": {
     "plan_ign": {
