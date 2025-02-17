@@ -11,7 +11,6 @@ import {format} from 'date-fns'
 import DossierModal from '@/components/demarches-simplifiees/dossier-modal.js'
 import DossierStateBadge from '@/components/demarches-simplifiees/dossier-state-badge.js'
 import PrelevementTypeBadge from '@/components/demarches-simplifiees/prelevement-type-badge.js'
-import {getDossierDSURL} from '@/lib/url.js'
 
 const modal = createModal({
   id: 'invalid-dossiers-modal',
@@ -151,3 +150,9 @@ const DossiersList = ({dossiers}) => {
 }
 
 export default DossiersList
+
+/* Helpers */
+
+function getDossierDSURL(dossier) {
+  return `https://www.demarches-simplifiees.fr/procedures/${process.env.NEXT_PUBLIC_PROCEDURE_DS_ID}/a-suivre/dossiers/${dossier.number}`
+}
