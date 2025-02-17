@@ -33,21 +33,21 @@ const DemandeurDetails = ({nom, prenom}) => (
       Demandeur
     </Typography>
     <Grid container spacing={2}>
-      <Grid item xs={6}>
+      <Grid xs={6}>
         <Typography variant='body1' color='text.secondary'>
           <strong>Nom:</strong>
         </Typography>
       </Grid>
-      <Grid item xs={6}>
+      <Grid xs={6}>
         <Typography variant='body1'>{nom}</Typography>
       </Grid>
 
-      <Grid item xs={6}>
+      <Grid xs={6}>
         <Typography variant='body1' color='text.secondary'>
           <strong>Prénom:</strong>
         </Typography>
       </Grid>
-      <Grid item xs={6}>
+      <Grid xs={6}>
         <Typography variant='body1'>{prenom}</Typography>
       </Grid>
     </Grid>
@@ -111,7 +111,7 @@ const DossierModal = ({selectedDossier}) => {
       <DemandeurDetails {...selectedDossier.demandeur} />
 
       {isLoading && (
-        <Box container>
+        <Box>
           <CircularProgress />
         </Box>
       )}
