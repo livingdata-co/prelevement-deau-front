@@ -11,6 +11,7 @@ import {format} from 'date-fns'
 import DossierModal from '@/components/demarches-simplifiees/dossier-modal.js'
 import DossierStateBadge from '@/components/demarches-simplifiees/dossier-state-badge.js'
 import PrelevementTypeBadge from '@/components/demarches-simplifiees/prelevement-type-badge.js'
+import TypeSaisieBadge from '@/components/demarches-simplifiees/type-saisie-badge.js'
 
 const modal = createModal({
   id: 'invalid-dossiers-modal',
@@ -25,6 +26,7 @@ const convertDossierToRow = dossier => ({
   dateDepot: dossier.dateDepot ? new Date(dossier.dateDepot) : null,
   dateTraitement: dossier.dateTraitement ? new Date(dossier.dateTraitement) : null,
   typePrelevement: dossier.typePrelevement,
+  typeDonnees: dossier.typeDonnees,
   demandeur: dossier.demandeur
 })
 
@@ -83,6 +85,19 @@ const DossiersList = ({dossiers}) => {
               {value: 'icpe-hors-zre', label: 'Prélèvement ICPE hors ZRE'},
               {value: 'camion-citerne', label: 'Prélèvement par camion citerne'},
               {value: 'autre', label: 'Extrait de registre'}
+            ]
+          },
+          {
+            field: 'typeDonnees',
+            headerName: 'Type de saisie',
+            renderCell: TypeSaisieBadge,
+            width: 150,
+            filterable: true,
+            type: 'singleSelect',
+            valueOptions: [
+              {value: 'vide', label: 'Vide (pas de données)'},
+              {value: 'tableur', label: 'Saisie via un tableur Excel ou ODS'},
+              {value: 'saisie-manuelle', label: 'Saisie manuelle dans le formulaire'}
             ]
           },
           {
