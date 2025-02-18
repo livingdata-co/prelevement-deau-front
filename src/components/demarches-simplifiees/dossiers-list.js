@@ -19,12 +19,12 @@ const modal = createModal({
 
 const convertDossierToRow = dossier => ({
   id: dossier._id,
-  number: dossier.number,
-  state: dossier.state,
+  numero: dossier.numero,
+  status: dossier.status,
   errorsCount: dossier.errorsCount,
   dateDepot: dossier.dateDepot ? new Date(dossier.dateDepot) : null,
   dateTraitement: dossier.dateTraitement ? new Date(dossier.dateTraitement) : null,
-  prelevementType: dossier.prelevementType,
+  typePrelevement: dossier.typePrelevement,
   demandeur: dossier.demandeur
 })
 
@@ -63,7 +63,7 @@ const DossiersList = ({dossiers}) => {
           }
         }}
         columns={[
-          {field: 'number', headerName: 'Numéro'},
+          {field: 'numero', headerName: 'Numéro'},
           {
             field: 'demandeur',
             headerName: 'Demandeur',
@@ -72,21 +72,21 @@ const DossiersList = ({dossiers}) => {
             valueFormatter: ({nom, prenom}) => `${nom.toUpperCase()} ${prenom}`
           },
           {
-            field: 'prelevementType',
+            field: 'typePrelevement',
             headerName: 'Type de prélèvement',
             renderCell: PrelevementTypeBadge,
             width: 200,
             filterable: true,
             type: 'singleSelect',
             valueOptions: [
-              {value: 'Prélèvement AEP ou en ZRE', label: 'Prélèvement AEP ou en ZRE'},
-              {value: 'Prélèvement ICPE hors ZRE', label: 'Prélèvement ICPE hors ZRE'},
-              {value: 'Prélèvement par camion citerne', label: 'Prélèvement par camion citerne'},
-              {value: 'Extrait de registre', label: 'Extrait de registre'}
+              {value: 'aep-zre', label: 'Prélèvement AEP ou en ZRE'},
+              {value: 'icpe-hors-zre', label: 'Prélèvement ICPE hors ZRE'},
+              {value: 'camion-citerne', label: 'Prélèvement par camion citerne'},
+              {value: 'autre', label: 'Extrait de registre'}
             ]
           },
           {
-            field: 'state',
+            field: 'status',
             headerName: 'État',
             renderCell: DossierStateBadge,
             width: 180,
@@ -94,10 +94,7 @@ const DossiersList = ({dossiers}) => {
             type: 'singleSelect',
             valueOptions: [
               {value: 'accepte', label: 'Accepté'},
-              {value: 'refuse', label: 'Refusé'},
-              {value: 'en_construction', label: 'En construction'},
-              {value: 'en_instruction', label: 'En instruction'},
-              {value: 'sans_suite', label: 'Sans suite'}
+              {value: 'en-instruction', label: 'En instruction'}
             ]
           },
           {
@@ -132,7 +129,7 @@ const DossiersList = ({dossiers}) => {
       />
 
       <modal.Component
-        title={`Dossier n°${selectedDossier?.number}`}
+        title={`Dossier n°${selectedDossier?.numero}`}
         buttons={selectedDossier ? [
           {
             linkProps: {href: getDossierDSURL(selectedDossier), target: '_blank'},
@@ -154,5 +151,5 @@ export default DossiersList
 /* Helpers */
 
 function getDossierDSURL(dossier) {
-  return `https://www.demarches-simplifiees.fr/procedures/${process.env.NEXT_PUBLIC_PROCEDURE_DS_ID}/a-suivre/dossiers/${dossier.number}`
+  return `https://www.demarches-simplifiees.fr/procedures/${process.env.NEXT_PUBLIC_PROCEDURE_DS_ID}/a-suivre/dossiers/${dossier.numero}`
 }

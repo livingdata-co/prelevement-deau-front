@@ -54,7 +54,7 @@ const DemandeurDetails = ({nom, prenom}) => (
   </Box>
 )
 
-const DossierInfo = ({dateDepot, prelevementType, state}) => (
+const DossierInfo = ({dateDepot, typePrelevement, status}) => (
   <Box className='flex justify-between mt-2'>
     <Box className='flex flex-wrap gap-2'>
       <Typography variant='body1' color='text.secondary'>
@@ -66,8 +66,8 @@ const DossierInfo = ({dateDepot, prelevementType, state}) => (
     </Box>
 
     <Box className='flex gap-2 mb-2'>
-      <DossierStateBadge value={state} />
-      <PrelevementTypeBadge value={prelevementType} />
+      <DossierStateBadge value={status} />
+      <PrelevementTypeBadge value={typePrelevement} />
     </Box>
   </Box>
 )
