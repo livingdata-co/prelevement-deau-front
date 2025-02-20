@@ -29,7 +29,7 @@ const SectionTitle = ({title}) => (
   </Box>
 )
 
-const SidePanel = ({point}) => {
+const PointSidePanel = ({point}) => {
   // État local pour gérer l’ouverture/fermeture de la modale
   const [openModal, setOpenModal] = useState(false)
   // Stocke l’exploitation sélectionnée dont on veut afficher les règles
@@ -64,7 +64,7 @@ const SidePanel = ({point}) => {
   }
 
   return (
-    <Box className='flex flex-col gap-4'>
+    <Box className='flex flex-col gap-4 px-4 pb-4'>
       {point.autres_noms && (
         <Typography variant='caption'>
           {formatAutresNoms(point.autres_noms)}
@@ -177,4 +177,4 @@ const SidePanel = ({point}) => {
   )
 }
 
-export default SidePanel
+export default PointSidePanel
