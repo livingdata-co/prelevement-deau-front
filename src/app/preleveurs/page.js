@@ -9,7 +9,7 @@ const Page = async () => {
   const orderedPreleveurs = orderBy(preleveurs, [p => Number.parseInt(p.id_beneficiaire, 10)])
 
   return (
-    <Box className='flex flex-col fr-container h-full w-full items-center'>
+    <Box className='flex flex-col fr-container h-full w-full'>
       <Typography variant='h4' className='fr-pt-3w'>Liste des préleveurs :</Typography>
       <PreleveursList preleveurs={orderedPreleveurs} />
     </Box>
