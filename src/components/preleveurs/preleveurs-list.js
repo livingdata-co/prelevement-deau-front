@@ -1,9 +1,15 @@
 'use client'
 
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 
 import {fr} from '@codegouvfr/react-dsfr'
-import {Box, Chip, TextField} from '@mui/material'
+import SearchIcon from '@mui/icons-material/Search'
+import {
+  Box,
+  Chip,
+  InputAdornment,
+  TextField
+} from '@mui/material'
 import Link from 'next/link'
 
 import FlexSearch from '../../../node_modules/flexsearch/dist/flexsearch.bundle.module.min.js'
@@ -12,29 +18,35 @@ import {getUsagesColors} from '@/components/map/legend-colors.js'
 
 const PreleveursList = ({preleveurs}) => {
   const [filteredPreleveurs, setFilteredPreleveurs] = useState(preleveurs)
-  const index = new FlexSearch.Document({
-    document: {
-      id: 'id_beneficiaire',
-      index: ['nom', 'prenom', 'raison_sociale', 'sigle'],
-      store: true
-    }
-  })
+  const index = useRef(null)
 
-  for (const preleveur of preleveurs) {
-    index.add(
-      preleveur.id_beneficiaire,
-      {
-        idBeneficiaire: preleveur.id_beneficiaire.toString(),
-        nom: preleveur.nom?.toLowerCase(),
-        prenom: preleveur.prenom?.toLowerCase(),
-        raisonSociale: preleveur.raison_sociale?.toLowerCase(),
-        sigle: preleveur.sigle?.toLowerCase()
+  useEffect(() => {
+    index.current = new FlexSearch.Document({
+      document: {
+        id: 'id_beneficiaire',
+        index: ['nom', 'prenom', 'raison_sociale', 'sigle'],
+        store: true
       }
-    )
-  }
+    })
+
+    for (const preleveur of preleveurs) {
+      index.current.add(
+        preleveur.id_beneficiaire,
+        {
+          idBeneficiaire: preleveur.id_beneficiaire.toString(),
+          nom: preleveur.nom?.toLowerCase(),
+          prenom: preleveur.prenom?.toLowerCase(),
+          raisonSociale: preleveur.raison_sociale?.toLowerCase(),
+          sigle: preleveur.sigle?.toLowerCase()
+        }
+      )
+    }
+
+    setFilteredPreleveurs(preleveurs)
+  }, [preleveurs])
 
   const handleFilter = e => {
-    const results = index.search(e.target.value.toLowerCase())
+    const results = index.current.search(e.target.value.toLowerCase())
     const newPreleveurs = []
 
     if (results.length > 0) {
@@ -56,6 +68,15 @@ const PreleveursList = ({preleveurs}) => {
     <Box className='flex flex-col gap-2 mt-8 w-full'>
       <TextField
         label='Chercher un préleveur'
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position='start'>
+                <SearchIcon />
+              </InputAdornment>
+            )
+          }
+        }}
         onChange={handleFilter}
       />
       {filteredPreleveurs.map((preleveur, index) => (
