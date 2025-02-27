@@ -2,6 +2,7 @@
 
 import {Box} from '@mui/material'
 import {DataGrid} from '@mui/x-data-grid'
+import {frFR} from '@mui/x-data-grid/locales'
 
 const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL
 
@@ -59,6 +60,7 @@ const Regles = ({regles}) => (
     <DataGrid
       disableSelectionOnClick
       hideFooterPagination
+      localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
       rows={regles}
       columns={reglesColumns}
       getRowId={row => row.id_regle}
