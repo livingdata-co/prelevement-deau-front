@@ -25,10 +25,10 @@ const Document = ({document}) => (
         </Typography>
       )}
       {document.remarque && (
-        <Typography>Remarque : {document.remarque}</Typography>
+        <Typography className='pl-3 pt-2'><b>Remarque :</b> <i>{document.remarque}</i></Typography>
       )}
     </Box>
-    <Typography variant='caption'>
+    <Typography variant='caption' className='p-5'>
       <a
         href={`${API_URL}/document/${document.nom_fichier}`}
         target='_blank'
