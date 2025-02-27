@@ -37,6 +37,24 @@ export async function getBeneficiaire(id) {
   }
 }
 
+export async function getBeneficiaires() {
+  try {
+    const response = await fetch(`${API_URL}/api/beneficiaires`)
+    return response.json()
+  } catch {
+    return null
+  }
+}
+
+export async function getPointsFromBeneficiaire(idBeneficiaire) {
+  try {
+    const response = await fetch(`${API_URL}/api/beneficiaires/${idBeneficiaire}/points-prelevement`)
+    return response.json()
+  } catch {
+    return null
+  }
+}
+
 export async function getBss(id) {
   if (!id) {
     return null
