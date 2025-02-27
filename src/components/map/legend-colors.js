@@ -13,3 +13,7 @@ export const legendColors = {
     {text: 'Eau souterraine', color: 'lightseagreen'}
   ]
 }
+
+export function getUsagesColors(usage) {
+  return legendColors.usages.find(u => u.text === usage)
+}
