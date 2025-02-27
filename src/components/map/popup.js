@@ -5,8 +5,8 @@ import {
   Typography,
   useTheme
 } from '@mui/material'
-import {format} from 'date-fns'
 
+import formatDate from '@/lib/format-date.js'
 import {formatAutresNoms} from '@/lib/points-prelevement.js'
 
 const Popup = ({point}) => {
@@ -47,7 +47,7 @@ const Popup = ({point}) => {
           <WaterDropOutlined />Statut de l’exploitation : {exploitationsStatus || 'non renseigné'}
         </Box>
         <Box className='flex items-center gap-1'>
-          Exploité depuis le {format(exploitationsStartDate, 'dd/MM/yyyy')}
+          Exploité depuis le {formatDate(exploitationsStartDate)}
         </Box>
         <Box>
           Zonage réglementaire : <Typography variant='caption' display='inline'>
