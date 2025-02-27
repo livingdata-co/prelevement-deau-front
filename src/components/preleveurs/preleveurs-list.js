@@ -82,7 +82,7 @@ const PreleveursList = ({preleveurs}) => {
       {filteredPreleveurs.map((preleveur, index) => (
         <Box
           key={preleveur.id_beneficiaire}
-          className='fr-p-2w flex justify-between items-center'
+          className='fr-p-2w flex justify-between items-center flex-wrap'
           sx={{
             backgroundColor: index % 2 === 0 ? fr.colors.decisions.background.default.grey.default : fr.colors.decisions.background.alt.blueFrance.default
           }}
