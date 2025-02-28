@@ -13,6 +13,7 @@ import {
   useTheme
 } from '@mui/material'
 import {deburr} from 'lodash-es'
+import {useSearchParams} from 'next/navigation'
 
 import {getPointsPrelevement} from '@/app/api/points-prelevement.js'
 import SidePanelLayout from '@/components/layout/side-panel.js'
@@ -28,6 +29,8 @@ import {extractTypeMilieu, extractUsages} from '@/lib/points-prelevement.js'
 
 const Page = () => {
   const theme = useTheme()
+  const searchParams = useSearchParams()
+  const pointId = searchParams.get('point-prelevement')
   // État pour les données
   const [points, setPoints] = useState([])
   const [loading, setLoading] = useState(true)
@@ -107,6 +110,14 @@ const Page = () => {
 
     setFilteredPoints(filtered.map(point => point.id_point))
   }, [filters, points])
+
+  useEffect(() => {
+    if (pointId) {
+      const point = points.find(point => pointId === point.id_point)
+
+      setSelectedPoint(point)
+    }
+  }, [pointId, points])
 
   return (
     <SidePanelLayout
