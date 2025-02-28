@@ -1,7 +1,10 @@
 'use client'
 
-import {Box} from '@mui/material'
-import {DataGrid} from '@mui/x-data-grid'
+import {Box, Tooltip} from '@mui/material'
+import {DataGrid, GridToolbar} from '@mui/x-data-grid'
+import {frFR} from '@mui/x-data-grid/locales'
+
+import formatDate, {formatPeriodeDate} from '@/lib/format-date.js'
 
 const API_URL = process.env.NEXT_PUBLIC_STORAGE_URL
 
@@ -31,14 +34,60 @@ const reglesColumns = [
     headerName: 'Contrainte',
     width: 100
   },
-  {field: 'debut_periode', headerName: 'Début période', width: 110},
-  {field: 'fin_periode', headerName: 'Fin période', width: 110},
-  {field: 'debut_validite', headerName: 'Début validité', width: 110},
-  {field: 'fin_validite', headerName: 'Fin validité', width: 110},
+  {
+    field: 'debut_validite',
+    headerName: 'Début validité',
+    width: 110,
+    renderCell(params) {
+      return (
+        formatDate(params.row.debut_validite)
+      )
+    }
+  },
+  {
+    field: 'fin_validite',
+    headerName: 'Fin validité',
+    width: 110,
+    renderCell(params) {
+      return (
+        formatDate(params.row.fin_validite)
+      )
+    }
+  },
+  {
+    field: 'debut_periode',
+    headerName: 'Début période',
+    width: 110,
+    renderCell(params) {
+      return (
+        <Tooltip
+          arrow
+          title='Début de période d’application de la règle, lorsque celle-ci ne s’applique que sur une période de l’année'
+        >
+          {formatPeriodeDate(params.row.debut_periode)}
+        </Tooltip>
+      )
+    }
+  },
+  {
+    field: 'fin_periode',
+    headerName: 'Fin période',
+    width: 110,
+    renderCell(params) {
+      return (
+        <Tooltip
+          arrow
+          title='Fin de période d’application de la règle, lorsque celle-ci ne s’applique que sur une période de l’année'
+        >
+          {formatPeriodeDate(params.row.fin_periode)}
+        </Tooltip>
+      )
+    }
+  },
   {
     field: 'document',
     headerName: 'Document',
-    width: 130,
+    width: 250,
     renderCell(params) {
       return (
         <a
@@ -51,7 +100,7 @@ const reglesColumns = [
       )
     }
   },
-  {field: 'remarque', headerName: 'Remarque', width: 250}
+  {field: 'remarque', headerName: 'Remarque', width: 400}
 ]
 
 const Regles = ({regles}) => (
@@ -59,6 +108,8 @@ const Regles = ({regles}) => (
     <DataGrid
       disableSelectionOnClick
       hideFooterPagination
+      slots={{toolbar: GridToolbar}}
+      localeText={frFR.components.MuiDataGrid.defaultProps.localeText}
       rows={regles}
       columns={reglesColumns}
       getRowId={row => row.id_regle}
