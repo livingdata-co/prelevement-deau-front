@@ -33,7 +33,7 @@ const PointLocalistation = ({pointPrelevement}) => (
           </Box>
         )}
         <LabelValue label='Profondeur' value={pointPrelevement.profondeur} />
-        <LabelValue label='Meso' value={pointPrelevement.code_meso} />
+        <LabelValue label='Masse d’eau souterraine (DCE)' value={pointPrelevement.meso.nom_provis} />
       </>
     )}
     {pointPrelevement.type_milieu === 'Eau de surface' && (
