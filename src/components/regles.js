@@ -57,7 +57,7 @@ const reglesColumns = [
   {
     field: 'debut_periode',
     headerName: 'Début période',
-    width: 110,
+    width: 120,
     renderCell(params) {
       return (
         <Tooltip
@@ -72,7 +72,7 @@ const reglesColumns = [
   {
     field: 'fin_periode',
     headerName: 'Fin période',
-    width: 110,
+    width: 120,
     renderCell(params) {
       return (
         <Tooltip
