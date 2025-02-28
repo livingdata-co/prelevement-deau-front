@@ -34,6 +34,7 @@ const PointLocalistation = ({pointPrelevement}) => (
         )}
         <LabelValue label='Profondeur' value={pointPrelevement.profondeur} />
         <LabelValue label='Masse d’eau souterraine (DCE)' value={pointPrelevement.meso.nom_provis} />
+        <LabelValue label='Zone de répartition des eaux' value={pointPrelevement.zre ? 'oui' : null} />
       </>
     )}
     {pointPrelevement.type_milieu === 'Eau de surface' && (
