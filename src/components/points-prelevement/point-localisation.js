@@ -26,6 +26,12 @@ const PointLocalistation = ({pointPrelevement}) => (
     )}
     {pointPrelevement.type_milieu === 'Eau souterraine' && (
       <>
+        {pointPrelevement.profondeur && (
+          <Box>
+            <b>Profondeur</b>
+            <i>{pointPrelevement.profondeur} m</i>
+          </Box>
+        )}
         <LabelValue label='Profondeur' value={pointPrelevement.profondeur} />
         <LabelValue label='Meso' value={pointPrelevement.code_meso} />
       </>
