@@ -47,8 +47,8 @@ const PointLocalistation = ({pointPrelevement}) => (
         )}
         <LabelValue label='Cours d’eau (BD Carthage)' value={pointPrelevement.bvBdCarthage?.toponyme_t} />
         <LabelValue label='Cours d’eau' value={pointPrelevement.cours_eau} />
-        <LabelValue label='ZRE' value={pointPrelevement.zre} />
-        <LabelValue label='Réservoir biologique' value={pointPrelevement.reservoir_bio} />
+        <LabelValue label='Zone de répartition des eaux' value={pointPrelevement.zre ? 'oui' : null} />
+        <LabelValue label='Réservoir biologique' value={pointPrelevement.reservoir_biologique ? 'oui' : null} />
       </>
     )}
   </Box>
