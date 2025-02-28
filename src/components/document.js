@@ -14,10 +14,10 @@ const Document = ({document}) => (
       justifyContent: 'space-between'
     }}
   >
-    <Box sx={{display: 'flex', flexDirection: 'column', p: 1}}>
+    <Box sx={{display: 'flex', flexDirection: 'column', p: 2}}>
       <Typography sx={{pr: 1}}>
         <Article sx={{pr: 1, verticalAlign: 'bottom'}} />
-        {document.nature} - {document.reference} du {formatDate(document.date_signature)}
+        {document.nature} {document.reference ? `- n°${document.reference}` : ''} du {formatDate(document.date_signature)}
       </Typography>
       {document.date_fin_validite && (
         <Typography variant='caption' sx={{pl: 2}}>
@@ -25,10 +25,10 @@ const Document = ({document}) => (
         </Typography>
       )}
       {document.remarque && (
-        <Typography>Remarque : {document.remarque}</Typography>
+        <Typography className='pl-3 pt-2'><b>Remarque :</b> <i>{document.remarque}</i></Typography>
       )}
     </Box>
-    <Typography variant='caption'>
+    <Typography variant='caption' className='p-5'>
       <a
         href={`${API_URL}/document/${document.nom_fichier}`}
         target='_blank'
