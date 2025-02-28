@@ -32,8 +32,11 @@ const PointLocalistation = ({pointPrelevement}) => (
     )}
     {pointPrelevement.type_milieu === 'Eau de surface' && (
       <>
+        <LabelValue
+          label='Masse d’eau cours d’eau (DCE)'
+          value={`${pointPrelevement.meContinentalesBv.code_dce} - ${pointPrelevement.meContinentalesBv.nom}`}
+        />
         <LabelValue label='Code bdCarthage' value={pointPrelevement.code_bv_bdcarthage} />
-        <LabelValue label='Code me continental' value={pointPrelevement.code_me_continental_bv} />
         <LabelValue label='Cours d’eau' value={pointPrelevement.cours_eau} />
         <LabelValue label='ZRE' value={pointPrelevement.zre} />
         <LabelValue label='Réservoir biologique' value={pointPrelevement.reservoir_bio} />
