@@ -98,7 +98,8 @@ const reglesColumns = [
           {params.row.document.nature}
         </a>
       )
-    }
+    },
+    valueGetter: params => params ? params.nature : ''
   },
   {field: 'remarque', headerName: 'Remarque', width: 400}
 ]
