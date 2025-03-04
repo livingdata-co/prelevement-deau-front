@@ -29,31 +29,35 @@ const styles = {
 }
 
 function loadMap(map, points) {
-  // On ajoute la source en ne gardant que les points filtrés
-  map.addSource(SOURCE_ID, {
-    type: 'geojson',
-    data: createPointPrelevementFeatures(points)
-  })
+  // Vérifie si la source existe déjà
+  if (map.getSource(SOURCE_ID)) {
+    // Si la source existe déjà, on met à jour ses données
+    map.getSource(SOURCE_ID).setData(createPointPrelevementFeatures(points))
+  } else {
+    map.addSource(SOURCE_ID, {
+      type: 'geojson',
+      data: createPointPrelevementFeatures(points)
+    })
+  }
 
-  // Layer combiné affichant le nom et le typeMilieu (entre parenthèses sur deux lignes)
-  map.addLayer({
-    id: 'points-prelevement-nom',
-    type: 'symbol',
-    source: SOURCE_ID,
-    layout: {
-      'text-field': [
-        'get',
-        'nom'
-      ],
-      'text-anchor': 'bottom',
-      'text-offset': ['get', 'textOffset']
-    },
-    paint: {
-      'text-halo-color': '#fff',
-      'text-halo-width': 2,
-      'text-color': '#000'
-    }
-  })
+  // Vérifie si le layer existe déjà avant de l'ajouter
+  if (!map.getLayer('points-prelevement-nom')) {
+    map.addLayer({
+      id: 'points-prelevement-nom',
+      type: 'symbol',
+      source: SOURCE_ID,
+      layout: {
+        'text-field': ['get', 'nom'],
+        'text-anchor': 'bottom',
+        'text-offset': ['get', 'textOffset']
+      },
+      paint: {
+        'text-halo-color': '#fff',
+        'text-halo-width': 2,
+        'text-color': '#000'
+      }
+    })
+  }
 }
 
 /**
@@ -85,66 +89,6 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
   const markersCacheRef = useRef({})
   /** Markers actuellement ajoutés sur la carte */
   const markersOnScreenRef = useRef({})
-
-  useEffect(() => {
-    if (!mapContainerRef.current) {
-      return
-    }
-
-    const map = new maplibre.Map({
-      container: mapContainerRef.current,
-      style: styles[style],
-      center: [55.55, -21.13],
-      zoom: 10,
-      debug: true,
-      attributionControl: {compact: true}
-    })
-
-    // Création d'une instance de popup réutilisable
-    popupRef.current = new maplibre.Popup({
-      closeButton: false,
-      closeOnClick: false
-    })
-
-    const scale = new maplibre.ScaleControl({
-      maxWidth: 80,
-      unit: 'metric'
-    })
-    map.addControl(scale, 'bottom-right')
-
-    mapRef.current = map
-
-    map.on('load', async () => {
-      loadMap(map, points)
-    })
-
-    // À chaque fois que la source GeoJSON est chargée, on met à jour les markers.
-    map.on('data', e => {
-      if (e.sourceId !== SOURCE_ID || !e.isSourceLoaded) {
-        return
-      }
-
-      map.on('move', updateMarkers)
-      map.on('moveend', updateMarkers)
-      updateMarkers()
-    })
-
-    return () => {
-      if (map) {
-        map.remove()
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  // À chaque fois que `points` ou `filteredPoints` changent, on met à jour la source.
-  useEffect(() => {
-    if (mapRef.current && mapRef.current.getSource(SOURCE_ID)) {
-      const visiblePoints = points.filter(pt => filteredPoints.includes(pt.id_point))
-      const newData = createPointPrelevementFeatures(visiblePoints)
-      mapRef.current.getSource(SOURCE_ID).setData(newData)
-    }
-  }, [points, filteredPoints])
 
   const updateMarkers = useCallback(() => {
     const map = mapRef.current
@@ -226,10 +170,60 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
     markersOnScreenRef.current = newMarkers
   }, [handleSelectedPoint])
 
-  /**
-   * À chaque changement de selectedPoint, on met à jour le style du layer
-   * "points-prelevement-nom" pour mettre en évidence le point sélectionné.
-   */
+  // Création de la carte et attachement unique des événements
+  useEffect(() => {
+    if (!mapContainerRef.current) {
+      return
+    }
+
+    const map = new maplibre.Map({
+      container: mapContainerRef.current,
+      style: styles[style],
+      center: [55.55, -21.13],
+      zoom: 10,
+      debug: true,
+      attributionControl: {compact: true}
+    })
+
+    popupRef.current = new maplibre.Popup({
+      closeButton: false,
+      closeOnClick: false
+    })
+
+    const scale = new maplibre.ScaleControl({
+      maxWidth: 80,
+      unit: 'metric'
+    })
+    map.addControl(scale, 'bottom-right')
+
+    mapRef.current = map
+
+    // Lors du chargement initial de la carte
+    map.on('load', () => {
+      loadMap(map, points)
+      updateMarkers()
+      // Attachez ces écouteurs une seule fois
+      map.on('move', updateMarkers)
+      map.on('moveend', updateMarkers)
+      map.on('render', updateMarkers)
+    })
+
+    return () => {
+      map.remove()
+    }
+    // Laisser le tableau de dépendances vide pour n'exécuter cet effet qu'une seule fois
+  }, [updateMarkers, style, points])
+
+  // Mise à jour de la source GeoJSON lorsque les points filtrés changent
+  useEffect(() => {
+    if (mapRef.current && mapRef.current.getSource(SOURCE_ID)) {
+      const visiblePoints = points.filter(pt => filteredPoints.includes(pt.id_point))
+      const newData = createPointPrelevementFeatures(visiblePoints)
+      mapRef.current.getSource(SOURCE_ID).setData(newData)
+    }
+  }, [points, filteredPoints])
+
+  // Met à jour le style du layer pour le point sélectionné
   useEffect(() => {
     const map = mapRef.current
     if (!map || !map.getLayer('points-prelevement-nom')) {
@@ -292,11 +286,13 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
     }
   }, [selectedPoint])
 
+  // Gestion du changement de fond de carte (style)
   useEffect(() => {
-    if (mapRef.current && style && mapRef.current.isStyleLoaded()) {
+    if (mapRef.current && style) {
       mapRef.current.setStyle(styles[style])
-      loadMap(mapRef.current, points)
-      mapRef.current.on('render', () => {
+      // Une fois le nouveau style chargé, ré-ajoutez la source et mettez à jour les markers
+      mapRef.current.once('styledata', () => {
+        loadMap(mapRef.current, points)
         updateMarkers()
       })
     }
