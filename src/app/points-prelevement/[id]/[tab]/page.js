@@ -1,3 +1,6 @@
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import Link from 'next/link'
+
 import {
   getBeneficiaire,
   getBnpe,
@@ -33,24 +36,30 @@ const Page = async ({params}) => {
   pointPrelevement.exploitations = exploitationsWithBeneficiaires
 
   return (
-    <div className='fr-container mt-4'>
-      <PointTabs selectedTab={selectedTab} />
-      {selectedTab === 'identification' && (
-        <PointIdentification
-          pointPrelevement={pointPrelevement}
-        />
-      )}
-      {selectedTab === 'localisation' && (
-        <PointLocalistation
-          pointPrelevement={pointPrelevement}
-        />
-      )}
-      {selectedTab === 'exploitations' && (
-        <PointExploitations
-          pointPrelevement={pointPrelevement}
-        />
-      )}
-    </div>
+    <>
+      <div className='pt-5 pl-5'>
+        <ArrowBackIcon className='pr-1' />
+        <Link href={`/points-prelevement?point-prelevement=${id}`}>Retour</Link>
+      </div>
+      <div className='fr-container mt-4'>
+        <PointTabs selectedTab={selectedTab} />
+        {selectedTab === 'identification' && (
+          <PointIdentification
+            pointPrelevement={pointPrelevement}
+          />
+        )}
+        {selectedTab === 'localisation' && (
+          <PointLocalistation
+            pointPrelevement={pointPrelevement}
+          />
+        )}
+        {selectedTab === 'exploitations' && (
+          <PointExploitations
+            pointPrelevement={pointPrelevement}
+          />
+        )}
+      </div>
+    </>
   )
 }
 

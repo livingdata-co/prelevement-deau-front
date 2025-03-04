@@ -26,17 +26,29 @@ const PointLocalistation = ({pointPrelevement}) => (
     )}
     {pointPrelevement.type_milieu === 'Eau souterraine' && (
       <>
+        {pointPrelevement.profondeur && (
+          <Box>
+            <b>Profondeur</b>
+            <i>{pointPrelevement.profondeur} m</i>
+          </Box>
+        )}
         <LabelValue label='Profondeur' value={pointPrelevement.profondeur} />
-        <LabelValue label='Meso' value={pointPrelevement.code_meso} />
+        <LabelValue label='Masse d’eau souterraine (DCE)' value={pointPrelevement.meso.nom_provis} />
+        <LabelValue label='Zone de répartition des eaux' value={pointPrelevement.zre ? 'oui' : null} />
       </>
     )}
     {pointPrelevement.type_milieu === 'Eau de surface' && (
       <>
-        <LabelValue label='Code bdCarthage' value={pointPrelevement.code_bv_bdcarthage} />
-        <LabelValue label='Code me continental' value={pointPrelevement.code_me_continental_bv} />
-        <LabelValue label='Cours d’eau' value={pointPrelevement.cours_eau} />
-        <LabelValue label='ZRE' value={pointPrelevement.zre} />
-        <LabelValue label='Réservoir biologique' value={pointPrelevement.reservoir_bio} />
+        {pointPrelevement.meContinentalesBv && (
+          <LabelValue
+            label='Masse d’eau cours d’eau (DCE)'
+            value={`${pointPrelevement.meContinentalesBv.code_dce} - ${pointPrelevement.meContinentalesBv.nom}`}
+          />
+        )}
+        <LabelValue label='Cours d’eau (BD Carthage)' value={pointPrelevement.bvBdCarthage?.toponyme_t} />
+        <LabelValue label='Cours d’eau indiqué dans l’autorisation' value={pointPrelevement.cours_eau} />
+        <LabelValue label='Zone de répartition des eaux' value={pointPrelevement.zre ? 'oui' : null} />
+        <LabelValue label='Réservoir biologique' value={pointPrelevement.reservoir_biologique ? 'oui' : null} />
       </>
     )}
   </Box>
