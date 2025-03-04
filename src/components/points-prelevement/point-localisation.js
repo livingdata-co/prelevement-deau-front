@@ -33,10 +33,10 @@ const PointLocalistation = ({pointPrelevement}) => (
           </Box>
         )}
         {pointPrelevement.meso && (
-          <LabelValue
-            label='Masse d’eau souterraine (DCE)'
-            value={pointPrelevement.meso.code - pointPrelevement.meso.nom_provis}
-          />
+          <Box>
+            <b>Masse d’eau souterraine (DCE) : </b>
+            <span>{pointPrelevement.meso.code} - {pointPrelevement.meso.nom_provis}</span>
+          </Box>
         )}
         <LabelValue label='Zone de répartition des eaux' value={pointPrelevement.zre ? 'oui' : null} />
       </>
@@ -44,10 +44,10 @@ const PointLocalistation = ({pointPrelevement}) => (
     {pointPrelevement.type_milieu === 'Eau de surface' && (
       <>
         {pointPrelevement.meContinentalesBv && (
-          <LabelValue
-            label='Masse d’eau cours d’eau (DCE)'
-            value={`${pointPrelevement.meContinentalesBv.code_dce} - ${pointPrelevement.meContinentalesBv.nom}`}
-          />
+          <Box>
+            <b>Masse d’eau cours d’eau (DCE) : </b>
+            <span>{pointPrelevement.meContinentalesBv.code_dce} - {pointPrelevement.meContinentalesBv.nom}</span>
+          </Box>
         )}
         <LabelValue label='Cours d’eau (BD Carthage)' value={pointPrelevement.bvBdCarthage?.toponyme_t} />
         <LabelValue label='Cours d’eau indiqué dans l’autorisation' value={pointPrelevement.cours_eau} />
