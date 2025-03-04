@@ -41,24 +41,6 @@ function loadMap(map, points) {
     })
   }
 
-  if (!map.getLayer('points-prelevement-nom')) {
-    map.addLayer({
-      id: 'points-prelevement-nom',
-      type: 'symbol',
-      source: SOURCE_ID,
-      layout: {
-        'text-field': ['get', 'nom'],
-        'text-anchor': 'bottom',
-        'text-offset': ['get', 'textOffset']
-      },
-      paint: {
-        'text-halo-color': '#fff',
-        'text-halo-width': 2,
-        'text-color': '#000'
-      }
-    })
-  }
-
   // --- Préparation des marqueurs sous forme de couche symbol ---
   // On enrichit chaque feature d'une propriété "icon" unique.
   const markersFeatures = geojson.features.map(feature => {
@@ -108,6 +90,24 @@ function loadMap(map, points) {
         'icon-image': ['get', 'icon'],
         'icon-size': 1,
         'icon-allow-overlap': true
+      }
+    })
+  }
+
+  if (!map.getLayer('points-prelevement-nom')) {
+    map.addLayer({
+      id: 'points-prelevement-nom',
+      type: 'symbol',
+      source: SOURCE_ID,
+      layout: {
+        'text-field': ['get', 'nom'],
+        'text-anchor': 'bottom',
+        'text-offset': ['get', 'textOffset']
+      },
+      paint: {
+        'text-halo-color': '#fff',
+        'text-halo-width': 2,
+        'text-color': '#000'
       }
     })
   }
