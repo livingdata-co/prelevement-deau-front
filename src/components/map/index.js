@@ -29,6 +29,57 @@ const stylesMap = {
   'vector-ign': vectorIGN
 }
 
+function updateHighlightedPoint(map, selectedPoint) {
+  if (selectedPoint) {
+    // Exclure le point sélectionné de la couche de labels standard
+    if (map.getLayer('points-prelevement-nom')) {
+      // On applique un filtre pour ne pas afficher le point avec l'id sélectionné
+      map.setFilter('points-prelevement-nom', ['!=', 'id_point', selectedPoint.id_point])
+    }
+
+    // Ajouter (ou mettre à jour) la couche de mise en surbrillance pour le point sélectionné
+    if (map.getLayer('selected-point-prelevement-nom')) {
+      // Mettre à jour le filtre si la couche existe déjà
+      map.setFilter('selected-point-prelevement-nom', ['==', 'id_point', selectedPoint.id_point])
+    } else {
+      map.addLayer({
+        id: 'selected-point-prelevement-nom',
+        type: 'symbol',
+        source: SOURCE_ID, // La source doit contenir tous les points
+        filter: ['==', 'id_point', selectedPoint.id_point],
+        layout: {
+          'text-field': ['get', 'nom'],
+          'text-size': 20,
+          'text-allow-overlap': true, // Pour qu'il soit toujours visible
+          'text-anchor': 'bottom',
+          'text-offset': ['get', 'textOffset']
+        },
+        paint: {
+          'text-halo-color': fr.colors.getHex({isDark: true}).decisions.background.flat.blueFrance.default,
+          'text-halo-width': 2,
+          'text-color': '#fff'
+        },
+        // S'assurer que la couche est visible à tous les niveaux de zoom
+        minzoom: 0,
+        maxzoom: 24
+      })
+    }
+
+    // Placer la couche de mise en surbrillance au-dessus des autres
+    map.moveLayer('selected-point-prelevement-nom')
+  } else {
+    // Aucun point sélectionné : réinitialiser le filtre pour afficher tous les labels
+    if (map.getLayer('points-prelevement-nom')) {
+      map.setFilter('points-prelevement-nom', null)
+    }
+
+    // Supprimer la couche dédiée si elle existe
+    if (map.getLayer('selected-point-prelevement-nom')) {
+      map.removeLayer('selected-point-prelevement-nom')
+    }
+  }
+}
+
 function loadMap(map, points) {
   // --- Chargement de la source et du layer de texte ---
   const geojson = createPointPrelevementFeatures(points)
@@ -117,6 +168,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
   const popupRef = useRef(null)
+  const currentStyleRef = useRef(style)
 
   // Stocke la valeur actuelle de "points" pour être accessible dans les callbacks
   const pointsRef = useRef(points)
@@ -199,7 +251,6 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
 
     // Attache les événements une fois que la carte est chargée
     map.on('load', () => {
-      loadMap(map, points)
       map.on('mouseenter', 'markers-symbol', onMarkerMouseEnter)
       map.on('mouseleave', 'markers-symbol', onMarkerMouseLeave)
       map.on('click', 'markers-symbol', onMarkerClick)
@@ -236,48 +287,29 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
     }
   }, [points, filteredPoints])
 
-  // Mise à jour du style du layer pour le point sélectionné
+  // Mise à jour du style de la carte et chargement des données
   useEffect(() => {
     const map = mapRef.current
-    if (!map || !map.getLayer('points-prelevement-nom')) {
-      return
-    }
 
+    if (map) {
+      if (style !== currentStyleRef.current) {
+        currentStyleRef.current = style
+        map.setStyle(style)
+      }
+
+      map.on('load', () => {
+        loadMap(map, points)
+        updateHighlightedPoint(map, selectedPoint)
+      })
+    }
+  }, [points, style, selectedPoint])
+
+  useEffect(() => {
+    const map = mapRef.current
     if (selectedPoint) {
-      map.setLayoutProperty(
-        'points-prelevement-nom',
-        'text-size',
-        ['case', ['==', ['get', 'id_point'], selectedPoint.id_point], 20, 16]
-      )
-      map.setPaintProperty(
-        'points-prelevement-nom',
-        'text-halo-color',
-        [
-          'case',
-          ['==', ['get', 'id_point'], selectedPoint.id_point],
-          fr.colors.getHex({isDark: true}).decisions.background.flat.blueFrance.default,
-          '#fff'
-        ]
-      )
-      map.setPaintProperty(
-        'points-prelevement-nom',
-        'text-color',
-        ['case', ['==', ['get', 'id_point'], selectedPoint.id_point], '#fff', '#000']
-      )
-    } else {
-      map.setLayoutProperty('points-prelevement-nom', 'text-size', 16)
-      map.setPaintProperty('points-prelevement-nom', 'text-halo-color', '#fff')
-      map.setPaintProperty('points-prelevement-nom', 'text-color', '#000')
-    }
-  }, [selectedPoint])
-
-  // Centrage et zoom sur le point sélectionné
-  useEffect(() => {
-    const map = mapRef.current
-    if (map && selectedPoint) {
       const coords
-        = selectedPoint.coordinates
-        || (selectedPoint.geom && selectedPoint.geom.coordinates)
+      = selectedPoint.coordinates
+      || (selectedPoint.geom && selectedPoint.geom.coordinates)
       if (coords) {
         map.flyTo({
           center: coords,
@@ -286,6 +318,12 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
           curve: 1.42
         })
       }
+    }
+
+    if (map && map.getLayer('points-prelevement-nom')) {
+      map.once('render', () => {
+        updateHighlightedPoint(map, selectedPoint)
+      })
     }
   }, [selectedPoint])
 
