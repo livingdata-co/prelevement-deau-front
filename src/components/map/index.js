@@ -1,6 +1,6 @@
 'use client'
 
-import {useCallback, useEffect, useRef} from 'react'
+import {useEffect, useRef} from 'react'
 
 import {fr} from '@codegouvfr/react-dsfr'
 import {Box} from '@mui/material'
@@ -17,11 +17,12 @@ import vector from './styles/vector.json'
 import {
   computeBestPopupAnchor,
   createUsagePieChart,
-  createPointPrelevementFeatures
+  createPointPrelevementFeatures,
+  createSVGDataURL
 } from '@/lib/points-prelevement.js'
 
 const SOURCE_ID = 'points-prelevement'
-const styles = {
+const stylesMap = {
   photo,
   'plan-ign': planIGN,
   vector,
@@ -29,18 +30,17 @@ const styles = {
 }
 
 function loadMap(map, points) {
-  // Vérifie si la source existe déjà
+  // --- Chargement de la source et du layer de texte ---
+  const geojson = createPointPrelevementFeatures(points)
   if (map.getSource(SOURCE_ID)) {
-    // Si la source existe déjà, on met à jour ses données
-    map.getSource(SOURCE_ID).setData(createPointPrelevementFeatures(points))
+    map.getSource(SOURCE_ID).setData(geojson)
   } else {
     map.addSource(SOURCE_ID, {
       type: 'geojson',
-      data: createPointPrelevementFeatures(points)
+      data: geojson
     })
   }
 
-  // Vérifie si le layer existe déjà avant de l'ajouter
   if (!map.getLayer('points-prelevement-nom')) {
     map.addLayer({
       id: 'points-prelevement-nom',
@@ -58,119 +58,72 @@ function loadMap(map, points) {
       }
     })
   }
+
+  // --- Préparation des marqueurs sous forme de couche symbol ---
+  // On enrichit chaque feature d'une propriété "icon" unique.
+  const markersFeatures = geojson.features.map(feature => {
+    const id = feature.properties.id_point
+    feature.properties.icon = 'marker-' + id
+    return feature
+  })
+  const markersGeoJSON = {
+    type: 'FeatureCollection',
+    features: markersFeatures
+  }
+  if (map.getSource('points-markers')) {
+    map.getSource('points-markers').setData(markersGeoJSON)
+  } else {
+    map.addSource('points-markers', {
+      type: 'geojson',
+      data: markersGeoJSON
+    })
+  }
+
+  // Pour chaque feature, on ajoute l'image générée à partir du SVG si elle n'existe pas déjà.
+  for (const feature of markersFeatures) {
+    const markerId = feature.properties.icon
+    if (!map.hasImage(markerId)) {
+      const el = createUsagePieChart(feature.properties.usages)
+      const dataURL = createSVGDataURL(el)
+      const img = new Image()
+      img.src = dataURL
+      img.addEventListener('load', () => {
+        if (!map.hasImage(markerId)) {
+          map.addImage(markerId, img, {pixelRatio: window.devicePixelRatio})
+        }
+      })
+
+      img.addEventListener('error', err => {
+        console.error('Erreur lors du chargement de l\'image:', err)
+      })
+    }
+  }
+
+  if (!map.getLayer('markers-symbol')) {
+    map.addLayer({
+      id: 'markers-symbol',
+      type: 'symbol',
+      source: 'points-markers',
+      layout: {
+        'icon-image': ['get', 'icon'],
+        'icon-size': 1,
+        'icon-allow-overlap': true
+      }
+    })
+  }
 }
 
-/**
- * Props attendues :
- *  - points : tableau complet des points (chargé côté serveur)
- *  - filteredPoints : tableau d'id (point.id_point) correspondant aux points à afficher
- *  - selectedPoint : point sélectionné (objet ou null)
- *  - handleSelectedPoint : callback recevant l'id du point sélectionné
- *  - style : style de la carte (photo, plan-ign, vector)
- */
 const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}) => {
   const mapContainerRef = useRef(null)
   const mapRef = useRef(null)
   const popupRef = useRef(null)
 
-  // 1. On crée une ref pour stocker la valeur actuelle de `points`
+  // Stocke la valeur actuelle de "points" pour être accessible dans les callbacks
   const pointsRef = useRef(points)
-
-  // 2. À chaque fois que la prop `points` change, on met à jour la ref
   useEffect(() => {
     pointsRef.current = points
   }, [points])
 
-  /**
-   * Cache des markers :
-   *  - clé : id unique (cluster_id ou id_point)
-   *  - valeur : instance de maplibre.Marker
-   */
-  const markersCacheRef = useRef({})
-  /** Markers actuellement ajoutés sur la carte */
-  const markersOnScreenRef = useRef({})
-
-  const updateMarkers = useCallback(() => {
-    const map = mapRef.current
-    if (!map || !map.isStyleLoaded()) {
-      return
-    }
-
-    const newMarkers = {}
-    const features = map.querySourceFeatures(SOURCE_ID)
-
-    for (const feature of features) {
-      const coords = feature.geometry.coordinates
-      const props = feature.properties
-      const id = props.id_point
-
-      let marker = markersCacheRef.current[id]
-      if (!marker) {
-        const el = createUsagePieChart(props)
-
-        if (!props.cluster && !el.dataset.eventsAttached) {
-          el.dataset.eventsAttached = 'true'
-          el.addEventListener('mouseenter', () => {
-            map.getCanvas().style.cursor = 'pointer'
-            const popupContainer = document.createElement('div')
-            const root = createRoot(popupContainer)
-            const hoveredPoint = pointsRef.current.find(
-              point => point.id_point === props.id_point
-            )
-            root.render(<Popup point={hoveredPoint} />)
-
-            // Supprimez l'ancienne popup si elle existe
-            if (popupRef.current) {
-              popupRef.current.remove()
-            }
-
-            // Créez une nouvelle popup avec l'ancre calculée
-            const dynamicPopup = new maplibre.Popup({
-              closeButton: false,
-              closeOnClick: false,
-              anchor: computeBestPopupAnchor(map, coords)
-            })
-
-            dynamicPopup
-              .setLngLat(coords)
-              .setDOMContent(popupContainer)
-              .addTo(map)
-
-            popupRef.current = dynamicPopup
-          })
-
-          el.addEventListener('mouseleave', () => {
-            map.getCanvas().style.cursor = ''
-            popupRef.current.remove()
-          })
-          el.addEventListener('click', () => {
-            handleSelectedPoint(props.id_point)
-            popupRef.current.remove()
-          })
-        }
-
-        markersCacheRef.current[id] = new maplibre.Marker({element: el}).setLngLat(coords)
-        marker = markersCacheRef.current[id]
-      }
-
-      newMarkers[id] = marker
-
-      if (!markersOnScreenRef.current[id]) {
-        marker.addTo(map)
-      }
-    }
-
-    // Retire de la carte les markers qui ne sont plus visibles.
-    for (const id in markersOnScreenRef.current) {
-      if (!newMarkers[id]) {
-        markersOnScreenRef.current[id].remove()
-      }
-    }
-
-    markersOnScreenRef.current = newMarkers
-  }, [handleSelectedPoint])
-
-  // Création de la carte et attachement unique des événements
   useEffect(() => {
     if (!mapContainerRef.current) {
       return
@@ -178,52 +131,122 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
 
     const map = new maplibre.Map({
       container: mapContainerRef.current,
-      style: styles[style],
+      style: stylesMap[style],
       center: [55.55, -21.13],
       zoom: 10,
       debug: true,
       attributionControl: {compact: true}
     })
+    mapRef.current = map
 
-    popupRef.current = new maplibre.Popup({
-      closeButton: false,
-      closeOnClick: false
-    })
-
+    // Contrôle d'échelle
     const scale = new maplibre.ScaleControl({
       maxWidth: 80,
       unit: 'metric'
     })
     map.addControl(scale, 'bottom-right')
 
-    mapRef.current = map
+    // Popup réutilisable
+    popupRef.current = new maplibre.Popup({
+      closeButton: false,
+      closeOnClick: false
+    })
 
-    // Lors du chargement initial de la carte
+    // Définition des callbacks pour la couche "markers-symbol"
+    const onMarkerMouseEnter = e => {
+      map.getCanvas().style.cursor = 'pointer'
+      if (e.features && e.features.length > 0) {
+        const feature = e.features[0]
+        const pointId = feature.properties.id_point
+        const hoveredPoint = pointsRef.current.find(point => point.id_point === pointId)
+        const popupContainer = document.createElement('div')
+        const root = createRoot(popupContainer)
+        root.render(<Popup point={hoveredPoint} />)
+        if (popupRef.current) {
+          popupRef.current.remove()
+        }
+
+        const coords = feature.geometry.coordinates
+        const dynamicPopup = new maplibre.Popup({
+          closeButton: false,
+          closeOnClick: false,
+          anchor: computeBestPopupAnchor(map, coords)
+        })
+          .setLngLat(coords)
+          .setDOMContent(popupContainer)
+          .addTo(map)
+        popupRef.current = dynamicPopup
+      }
+    }
+
+    const onMarkerMouseLeave = () => {
+      map.getCanvas().style.cursor = ''
+      if (popupRef.current) {
+        popupRef.current.remove()
+      }
+    }
+
+    const onMarkerClick = e => {
+      if (e.features && e.features.length > 0) {
+        const feature = e.features[0]
+        handleSelectedPoint(feature.properties.id_point)
+        if (popupRef.current) {
+          popupRef.current.remove()
+        }
+      }
+    }
+
+    // Attache les événements une fois que la carte est chargée
     map.on('load', () => {
       loadMap(map, points)
-      updateMarkers()
-      // Attachez ces écouteurs une seule fois
-      map.on('move', updateMarkers)
-      map.on('moveend', updateMarkers)
-      map.on('render', updateMarkers)
+      map.on('mouseenter', 'markers-symbol', onMarkerMouseEnter)
+      map.on('mouseleave', 'markers-symbol', onMarkerMouseLeave)
+      map.on('click', 'markers-symbol', onMarkerClick)
+    })
+
+    // En cas de changement de style, recharge les sources/layers et réattache les événements
+    map.once('style.load', () => {
+      loadMap(map, points)
+      map.off('mouseenter', 'markers-symbol', onMarkerMouseEnter)
+      map.off('mouseleave', 'markers-symbol', onMarkerMouseLeave)
+      map.off('click', 'markers-symbol', onMarkerClick)
+      map.on('mouseenter', 'markers-symbol', onMarkerMouseEnter)
+      map.on('mouseleave', 'markers-symbol', onMarkerMouseLeave)
+      map.on('click', 'markers-symbol', onMarkerClick)
     })
 
     return () => {
       map.remove()
     }
-    // Laisser le tableau de dépendances vide pour n'exécuter cet effet qu'une seule fois
-  }, [updateMarkers, style, points])
+  }, [style, points, handleSelectedPoint])
 
-  // Mise à jour de la source GeoJSON lorsque les points filtrés changent
+  // Mise à jour des sources lorsque les points filtrés changent
   useEffect(() => {
-    if (mapRef.current && mapRef.current.getSource(SOURCE_ID)) {
-      const visiblePoints = points.filter(pt => filteredPoints.includes(pt.id_point))
-      const newData = createPointPrelevementFeatures(visiblePoints)
-      mapRef.current.getSource(SOURCE_ID).setData(newData)
+    if (!mapRef.current) {
+      return
+    }
+
+    const visiblePoints = points.filter(pt => filteredPoints.includes(pt.id_point))
+    if (mapRef.current.getSource(SOURCE_ID)) {
+      mapRef.current.getSource(SOURCE_ID).setData(createPointPrelevementFeatures(visiblePoints))
+    }
+
+    if (mapRef.current.getSource('points-markers')) {
+      const baseGeojson = createPointPrelevementFeatures(visiblePoints)
+      const markersFeatures = baseGeojson.features.map(feature => {
+        const id = feature.properties.id_point
+        feature.properties.icon = 'marker-' + id
+        return feature
+      })
+      const markersGeoJSON = {
+        type: 'FeatureCollection',
+        features: markersFeatures
+      }
+      mapRef.current.getSource('points-markers').setData(markersGeoJSON)
     }
   }, [points, filteredPoints])
 
-  // Met à jour le style du layer pour le point sélectionné
+  // Mise à jour du style du layer pour le point sélectionné
   useEffect(() => {
     const map = mapRef.current
     if (!map || !map.getLayer('points-prelevement-nom')) {
@@ -234,12 +257,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
       map.setLayoutProperty(
         'points-prelevement-nom',
         'text-size',
-        [
-          'case',
-          ['==', ['get', 'id_point'], selectedPoint.id_point],
-          20,
-          16
-        ]
+        ['case', ['==', ['get', 'id_point'], selectedPoint.id_point], 20, 16]
       )
       map.setPaintProperty(
         'points-prelevement-nom',
@@ -254,12 +272,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
       map.setPaintProperty(
         'points-prelevement-nom',
         'text-color',
-        [
-          'case',
-          ['==', ['get', 'id_point'], selectedPoint.id_point],
-          '#fff',
-          '#000'
-        ]
+        ['case', ['==', ['get', 'id_point'], selectedPoint.id_point], '#fff', '#000']
       )
     } else {
       map.setLayoutProperty('points-prelevement-nom', 'text-size', 16)
@@ -268,7 +281,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
     }
   }, [selectedPoint])
 
-  // Centrage et zoom sur le selectedPoint
+  // Centrage et zoom sur le point sélectionné
   useEffect(() => {
     const map = mapRef.current
     if (map && selectedPoint) {
@@ -285,18 +298,6 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
       }
     }
   }, [selectedPoint])
-
-  // Gestion du changement de fond de carte (style)
-  useEffect(() => {
-    if (mapRef.current && style) {
-      mapRef.current.setStyle(styles[style])
-      // Une fois le nouveau style chargé, ré-ajoutez la source et mettez à jour les markers
-      mapRef.current.once('styledata', () => {
-        loadMap(mapRef.current, points)
-        updateMarkers()
-      })
-    }
-  }, [style, points, updateMarkers])
 
   return (
     <Box className='flex h-full w-full relative'>
