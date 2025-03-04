@@ -28,12 +28,16 @@ const PointLocalistation = ({pointPrelevement}) => (
       <>
         {pointPrelevement.profondeur && (
           <Box>
-            <b>Profondeur</b>
+            <b>Profondeur : </b>
             <i>{pointPrelevement.profondeur} m</i>
           </Box>
         )}
-        <LabelValue label='Profondeur' value={pointPrelevement.profondeur} />
-        <LabelValue label='Masse d’eau souterraine (DCE)' value={pointPrelevement.meso.nom_provis} />
+        {pointPrelevement.meso && (
+          <LabelValue
+            label='Masse d’eau souterraine (DCE)'
+            value={pointPrelevement.meso.code - pointPrelevement.meso.nom_provis}
+          />
+        )}
         <LabelValue label='Zone de répartition des eaux' value={pointPrelevement.zre ? 'oui' : null} />
       </>
     )}
