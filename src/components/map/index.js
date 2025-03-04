@@ -132,8 +132,9 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
     const map = new maplibre.Map({
       container: mapContainerRef.current,
       style: stylesMap[style],
-      center: [55.55, -21.13],
-      zoom: 10,
+      center: mapRef.current ? mapRef.current.getCenter() : [55.55, -21.13],
+      zoom: mapRef.current ? mapRef.current.getZoom() : 10,
+      hash: true,
       debug: true,
       attributionControl: {compact: true}
     })
@@ -199,17 +200,6 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
     // Attache les événements une fois que la carte est chargée
     map.on('load', () => {
       loadMap(map, points)
-      map.on('mouseenter', 'markers-symbol', onMarkerMouseEnter)
-      map.on('mouseleave', 'markers-symbol', onMarkerMouseLeave)
-      map.on('click', 'markers-symbol', onMarkerClick)
-    })
-
-    // En cas de changement de style, recharge les sources/layers et réattache les événements
-    map.once('style.load', () => {
-      loadMap(map, points)
-      map.off('mouseenter', 'markers-symbol', onMarkerMouseEnter)
-      map.off('mouseleave', 'markers-symbol', onMarkerMouseLeave)
-      map.off('click', 'markers-symbol', onMarkerClick)
       map.on('mouseenter', 'markers-symbol', onMarkerMouseEnter)
       map.on('mouseleave', 'markers-symbol', onMarkerMouseLeave)
       map.on('click', 'markers-symbol', onMarkerClick)
