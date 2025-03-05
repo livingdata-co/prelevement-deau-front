@@ -321,9 +321,7 @@ const Map = ({points, filteredPoints, selectedPoint, handleSelectedPoint, style}
     }
 
     if (map && map.getLayer('points-prelevement-nom')) {
-      map.once('render', () => {
-        updateHighlightedPoint(map, selectedPoint)
-      })
+      updateHighlightedPoint(map, selectedPoint)
     }
   }, [selectedPoint])
 
