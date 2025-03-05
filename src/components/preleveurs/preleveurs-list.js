@@ -36,7 +36,7 @@ const PreleveursList = ({preleveurs}) => {
           idBeneficiaire: preleveur.id_beneficiaire.toString(),
           nom: preleveur.nom?.toLowerCase(),
           prenom: preleveur.prenom?.toLowerCase(),
-          raisonSociale: preleveur.raison_sociale?.toLowerCase(),
+          raison_sociale: preleveur.raison_sociale?.toLowerCase(), // eslint-disable-line camelcase
           sigle: preleveur.sigle?.toLowerCase()
         }
       )
