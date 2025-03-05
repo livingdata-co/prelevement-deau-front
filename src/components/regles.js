@@ -99,7 +99,7 @@ const reglesColumns = [
         </a>
       )
     },
-    valueGetter: params => params ? params.nature : ''
+    valueGetter: params => params ? `${API_URL}/document/${params.nom_fichier}` : ''
   },
   {field: 'remarque', headerName: 'Remarque', width: 400}
 ]
