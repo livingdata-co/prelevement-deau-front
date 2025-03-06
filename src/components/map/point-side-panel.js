@@ -164,7 +164,7 @@ const PointSidePanel = ({point}) => {
       >
         <SectionTitle title='Historique des Exploitations' />
 
-        {(!point.exploitations || point.exploitations.length === 0) && (
+        {exploitations.length === 0 && (
           <Typography sx={{ml: 2}}>Aucune exploitation.</Typography>
         )}
         {exploitations.length > 0 && exploitations.map(exploitation => (
