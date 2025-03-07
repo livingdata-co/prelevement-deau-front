@@ -54,7 +54,7 @@ const Home = async () => {
         <Box className='flex m-auto'>
           <Counter
             label='Nombre de point de prélèvement en activité : '
-            number={stats.nbActivPointsPrelevement}
+            number={stats.activPointsPrelevementCount}
           />
         </Box>
         <Box
@@ -68,8 +68,8 @@ const Home = async () => {
         >
           <Pie
             data={[
-              {id: 'surface', value: stats.nbActivPointsSurface, label: 'Surface'},
-              {id: 'souterrain', value: stats.nbActivPointsSouterrain, label: 'Souterrain'}
+              {id: 'surface', value: stats.activPointsSurfaceCount, label: 'Surface'},
+              {id: 'souterrain', value: stats.activPointsSouterrainCount, label: 'Souterrain'}
             ]}
           />
         </Box>
@@ -104,10 +104,10 @@ const Home = async () => {
         >
           <Counter
             label='Nombre de préleveurs actifs : '
-            number={stats.nbActivBeneficiaires}
+            number={stats.activBeneficiairesCount}
           />
           <Box>
-            <Link href='/beneficiaires' className='fr-btn fr-btn--secondary'>
+            <Link href='/preleveurs' className='fr-btn fr-btn--secondary'>
               Accéder à la liste des préleveurs
             </Link>
           </Box>
