@@ -4,10 +4,9 @@ const Counter = ({label, number}) => (
   <Paper
     elevation={3}
     sx={{
-      flex: 1,
       margin: '15px',
       padding: '15px',
-      maxWidth: '380px',
+      maxWidth: '450px',
       border: '1px solid lightgrey',
       borderRadius: '5px'
     }}

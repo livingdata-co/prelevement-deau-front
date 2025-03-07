@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 import {getStats} from '@/app/api/points-prelevement.js'
 import Counter from '@/components/counter.js'
+import Pie from '@/components/pie.js'
 
 const Home = async () => {
   const stats = await getStats()
@@ -28,7 +29,7 @@ const Home = async () => {
             <Link href='/points-prelevement' className='fr-btn fr-btn--secondary'>Accéder à la carte des points de prélèvements</Link>
           </Box>
           <Box
-            className='fr-col-12 fr-col-lg-6 m-5'
+            className='fr-col-12 fr-col-lg-6 mt-5'
             sx={{
               position: 'relative',
               width: '100%',
@@ -49,7 +50,31 @@ const Home = async () => {
           </Box>
         </Box>
       </Box>
-      <Box className='fr-container fr-container-fluid fr-mb-5w'>
+      <Box className='flex flex-wrap justify-between items-center m-auto pt-8' sx={{maxWidth: '1200px'}}>
+        <Box className='flex m-auto'>
+          <Counter
+            label='Nombre de point de prélèvement en activité : '
+            number={stats.nbActivPointsPrelevement}
+          />
+        </Box>
+        <Box
+          sx={{
+            width: '100%',
+            maxWidth: '500px',
+            margin: '0 auto',
+            display: 'flex',
+            justifyContent: 'end'
+          }}
+        >
+          <Pie
+            data={[
+              {id: 'surface', value: stats.nbActivPointsSurface, label: 'Surface'},
+              {id: 'souterrain', value: stats.nbActivPointsSouterrain, label: 'Souterrain'}
+            ]}
+          />
+        </Box>
+      </Box>
+      <Box className='m-auto py-8' sx={{maxWidth: '1200px'}}>
         <Typography variant='body1' className='p-5'>
           Il s’agit d’un outil d’aide à la décision, <b>destiné à faciliter l’évaluation et le suivi dans le temps des impacts des prélèvements sur les milieux.</b> Il s’adresse aussi bien aux services en charge de l’instruction et du contrôle des autorisations administratives qu’aux préleveurs bénéficiaires de ces autorisations. Les établissements publics, collectivités ou encore le grand public y trouveront également des informations utiles à la compréhension et la mise en œuvre d’une gestion globale et concertée de la ressource en eau, telle que prévue par le Schéma directeur d’aménagement et de gestion des eaux (SDAGE) de La Réunion.
         </Typography>
@@ -64,37 +89,28 @@ const Home = async () => {
         </Typography>
       </Box>
       <Box
+        className='w-full'
         sx={{
-          backgroundColor: fr.colors.decisions.background.alt.blueFrance.default
+          backgroundColor: fr.colors.decisions.background.alt.blueFrance.default,
+          p: '3em'
         }}
       >
         <Box
-          className='flex flex-wrap gap-8 justify-center my-8'
+          className='flex flex-wrap justify-between items-center'
           sx={{
             maxWidth: '1000px',
             m: 'auto'
           }}
         >
           <Counter
-            label='Nombre de points de prélèvement : '
-            number={stats.nbPointsPrelevement}
-          />
-          <Counter
-            label='Nombre de préleveurs total : '
-            number={stats.nbBeneficiaires}
-          />
-          <Counter
             label='Nombre de préleveurs actifs : '
-            number={stats.nbBeneficiairesActiv}
+            number={stats.nbActivBeneficiaires}
           />
-          <Counter
-            label='Nombre d’exploitations : '
-            number={stats.nbExploitations}
-          />
-          <Counter
-            label='Nombre d’exploitations en activité : '
-            number={stats.nbExploitationsActiv}
-          />
+          <Box>
+            <Link href='/beneficiaires' className='fr-btn fr-btn--secondary'>
+              Accéder à la liste des préleveurs
+            </Link>
+          </Box>
         </Box>
       </Box>
     </Box>
