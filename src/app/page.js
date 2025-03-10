@@ -41,7 +41,7 @@ const Home = async () => {
               fill
               priority
               sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-              src='/images/capture-carte-points-prelevement.png'
+              src='/images/capture-carte-points-prelevement.jpg'
               style={{
                 objectFit: 'cover'
               }}
