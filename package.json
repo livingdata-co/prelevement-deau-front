@@ -8,7 +8,7 @@
     "build": "yarn react-dsfr update-icons && next build",
     "start": "next start",
     "lint": "xo",
-    "scalingo-postbuild": "yarn build && yarn workspaces focus --production"
+    "scalingo-postbuild": "yarn build && yarn workspaces focus --production && du -h --max-depth=1 ."
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
