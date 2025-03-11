@@ -89,18 +89,13 @@ const Home = async () => {
         </Typography>
       </Box>
       <Box
-        className='w-full'
         sx={{
           backgroundColor: fr.colors.decisions.background.alt.blueFrance.default,
           p: '3em'
         }}
       >
         <Box
-          className='flex flex-wrap justify-between items-center'
-          sx={{
-            maxWidth: '1000px',
-            m: 'auto'
-          }}
+          className='fr-container flex flex-wrap justify-between items-center'
         >
           <Counter
             label='Nombre de préleveurs actifs : '
