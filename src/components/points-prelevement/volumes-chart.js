@@ -1,0 +1,127 @@
+'use client'
+
+import {useState} from 'react'
+
+import {
+  LineChart,
+  ChartsReferenceLine
+} from '@mui/x-charts'
+import {format, parseISO} from 'date-fns'
+import {fr} from 'date-fns/locale'
+
+const VolumesChart = ({volumes}) => {
+  const [showAll, setShowAll] = useState(false)
+  const sortedData = [...volumes.valeurs].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
+  const displayData = showAll ? sortedData : sortedData.slice(-12)
+  const xLabels = displayData.map(item => item.date)
+  const volumeData = displayData.map(item => item.volume)
+  const exceededData = displayData.map(item => ({
+    date: item.date,
+    volume: item.volume > volumes.volumeJournalierMax ? item.volume : null
+  }))
+
+  const series = [
+    {
+      data: displayData.map(item => item.volume),
+      color: '#2563eb',
+      showMark: true,
+      area: false,
+      valueFormatter: value => `${value} m³`
+    },
+    {
+      data: exceededData.map(item => item.volume),
+      color: 'rgb(239, 68, 68)',
+      showMark: true,
+      area: false,
+      line: true,
+      valueFormatter: () => null
+    }
+  ]
+
+  const hasVolumeMax = volumes.volumeJournalierMax !== null
+
+  return (
+    <div className='w-full border-[1px] p-3'>
+      <div className='flex justify-between p-3 border-b flex-wrap'>
+        <p>
+          <b>Période du </b>
+          <i> {format(parseISO(volumes.dateDebut), 'dd/MM/yyyy')} </i>
+          <b> au </b>
+          <i> {format(parseISO(volumes.dateFin), 'dd/MM/yyyy')} </i>
+          <small><u>{showAll ? '' : ' (12 derniers mois)'}</u></small>
+        </p>
+        <button type='button' className='fr-btn ml-auto' onClick={() => setShowAll(!showAll)}>
+          {showAll ? 'Afficher les 12 derniers mois' : 'Afficher toutes les données'}
+        </button>
+      </div>
+      <div className='h-[400px] w-full'>
+        <LineChart
+          series={series}
+          xAxis={[
+            {
+              data: xLabels,
+              scaleType: 'band',
+              valueFormatter: date => format(parseISO(date), 'dd/MM/yyyy', {locale: fr}),
+              tickLabelStyle: {
+                angle: 45,
+                textAnchor: 'start',
+                fontSize: 12
+              }
+            }
+          ]}
+          yAxis={[
+            {
+              min: 65,
+              max: Math.max(...volumeData, volumes.volumeJournalierMax || 0) + 5
+            }
+          ]}
+          height={350}
+          margin={{
+            left: 60,
+            right: 20,
+            top: 20,
+            bottom: 70
+          }}
+          grid={{
+            vertical: true,
+            horizontal: true
+          }}
+          slotProps={{
+            legend: {
+              direction: 'row',
+              position: {vertical: 'top', horizontal: 'right'}
+            },
+            tooltip: {
+              filter: item => item.seriesId === 'series-0'
+            }
+          }}
+        >
+          {hasVolumeMax && (
+            <ChartsReferenceLine
+              y={volumes.volumeJournalierMax}
+              label={`Volume max: ${volumes.volumeJournalierMax} m³`}
+              labelAlign='start'
+              lineStyle={{
+                stroke: '#ef4444',
+                strokeWidth: 2,
+                strokeDasharray: '5 5'
+              }}
+            />
+          )}
+        </LineChart>
+      </div>
+      <div className='flex flex-columns justify-between'>
+        <div className='mt-4 text-sm'>
+          {volumes.volumeJournalierMax && (
+            <p><b>Volume journalier maximum : </b>{volumes?.volumeJournalierMax} m³</p>
+          )}
+          <p>
+            <b>Nombre de dépassements : </b> {volumes.nbDepassements || 'non renseigné'} sur {volumes.nbValeursRenseignees} valeurs
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default VolumesChart
