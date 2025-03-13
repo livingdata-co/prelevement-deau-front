@@ -26,7 +26,7 @@ const VolumesChart = ({volumes}) => {
       color: '#2563eb',
       showMark: true,
       area: false,
-      valueFormatter: value => `${value} m³`
+      valueFormatter: value => `${Number.parseFloat(value).toLocaleString('fr-FR')} m³`
     },
     {
       data: exceededData.map(item => item.volume),
@@ -72,7 +72,8 @@ const VolumesChart = ({volumes}) => {
           yAxis={[
             {
               min: 65,
-              max: Math.max(...volumeData, volumes.volumeJournalierMax || 0) + 5
+              max: Math.max(...volumeData, volumes.volumeJournalierMax || 0) + 5,
+              valueFormatter: volume => Number.parseFloat(volume).toLocaleString('fr-FR')
             }
           ]}
           height={350}
