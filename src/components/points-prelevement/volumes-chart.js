@@ -125,7 +125,7 @@ const VolumesChart = ({volumes, isLoading}) => {
       <div className='flex flex-columns justify-between'>
         <div className='mt-4 text-sm'>
           {volumes.volumeJournalierMax && (
-            <p><b>Volume journalier maximum : </b>{volumes?.volumeJournalierMax} m³</p>
+            <p><b>Volume journalier maximum par mois : </b>{volumes?.volumeJournalierMax} m³</p>
           )}
           <p>
             <b>Nombre de dépassements : </b> {nbDepassements} sur {nbValeursRenseignees} valeurs
