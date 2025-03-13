@@ -2,6 +2,7 @@
 
 import {useState} from 'react'
 
+import {fr as frColors} from '@codegouvfr/react-dsfr'
 import {CircularProgress} from '@mui/material'
 import {
   LineChart,
@@ -24,7 +25,7 @@ const VolumesChart = ({volumes, isLoading}) => {
   const series = [
     {
       data: displayData.map(item => item.volume),
-      color: '#2563eb',
+      color: frColors.colors.decisions.artwork.major.blueFrance.active,
       showMark: true,
       area: false,
       valueFormatter(value) {
@@ -33,7 +34,7 @@ const VolumesChart = ({volumes, isLoading}) => {
     },
     {
       data: exceededData.map(item => item.volume),
-      color: '#ef4444',
+      color: frColors.colors.decisions.artwork.major.redMarianne.active,
       showMark: true,
       area: false,
       line: true,
@@ -112,7 +113,7 @@ const VolumesChart = ({volumes, isLoading}) => {
                 label={`Volume max: ${Number.parseFloat(volumes.volumeJournalierMax).toLocaleString('fr-FR')} m³`}
                 labelAlign='start'
                 lineStyle={{
-                  stroke: '#ef4444',
+                  stroke: frColors.colors.decisions.artwork.major.redMarianne.default,
                   strokeWidth: 2,
                   strokeDasharray: '5 5'
                 }}
