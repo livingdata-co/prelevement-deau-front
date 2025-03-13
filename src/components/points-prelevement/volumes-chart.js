@@ -28,7 +28,7 @@ const VolumesChart = ({volumes, isLoading}) => {
       showMark: true,
       area: false,
       valueFormatter(value) {
-        return value === null ? 'Non renseigné' : `${Number.parseFloat(value).toLocaleString('fr-FR')} m³`
+        return value ? `${Number.parseFloat(value).toLocaleString('fr-FR')} m³` : 'Non renseigné'
       }
     },
     {
