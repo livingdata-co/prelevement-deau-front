@@ -43,7 +43,7 @@ const VolumesChart = ({volumes, isLoading}) => {
     }
   ]
 
-  const hasVolumeMax = volumes.volumeJournalierMax !== null
+  const hasVolumeMax = volumes.volumeJournalierMax
   const nbValeursRenseignees = showAll ? volumes.nbValeursRenseignees : displayData.length
   const nbDepassements = showAll ? volumes.nbDepassements : displayData.filter(v => v.depassement).length
 
@@ -124,8 +124,8 @@ const VolumesChart = ({volumes, isLoading}) => {
       </div>
       <div className='flex flex-columns justify-between'>
         <div className='mt-4 text-sm'>
-          {volumes.volumeJournalierMax && (
-            <p><b>Volume journalier maximum par mois : </b>{volumes?.volumeJournalierMax} m³</p>
+          {hasVolumeMax && (
+            <p><b>Volume journalier maximum par mois : </b>{volumes.volumeJournalierMax} m³</p>
           )}
           <p>
             <b>Nombre de dépassements : </b> {nbDepassements} sur {nbValeursRenseignees} valeurs
