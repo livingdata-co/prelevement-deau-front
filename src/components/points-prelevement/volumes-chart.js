@@ -34,6 +34,7 @@ const VolumesChart = ({volumes}) => {
       showMark: true,
       area: false,
       line: true,
+      // Masque la valeur affichée dans le tooltip, valeur déjà affichée avec la première série.
       valueFormatter: () => null
     }
   ]
