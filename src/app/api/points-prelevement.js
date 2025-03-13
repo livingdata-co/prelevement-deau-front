@@ -102,3 +102,9 @@ export async function getStats() {
 
   return stats
 }
+
+export async function getVolumesExploitation(exploitationId) {
+  const response = await fetch(`${API_URL}/api/exploitations/${exploitationId}/volumes-preleves`)
+  const volumes = await response.json()
+  return volumes
+}
