@@ -2,6 +2,7 @@
 
 import {useState} from 'react'
 
+import {CircularProgress} from '@mui/material'
 import {
   LineChart,
   ChartsReferenceLine
@@ -9,7 +10,7 @@ import {
 import {format, parseISO} from 'date-fns'
 import {fr} from 'date-fns/locale'
 
-const VolumesChart = ({volumes}) => {
+const VolumesChart = ({volumes, isLoading}) => {
   const [showAll, setShowAll] = useState(false)
   const sortedData = [...volumes.valeurs].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
   const displayData = showAll ? sortedData : sortedData.slice(-12)
@@ -56,61 +57,65 @@ const VolumesChart = ({volumes}) => {
         </button>
       </div>
       <div className='h-[400px] w-full'>
-        <LineChart
-          series={series}
-          xAxis={[
-            {
-              data: xLabels,
-              scaleType: 'band',
-              valueFormatter: date => format(parseISO(date), 'dd/MM/yyyy', {locale: fr}),
-              tickLabelStyle: {
-                angle: 45,
-                textAnchor: 'start',
-                fontSize: 12
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <LineChart
+            series={series}
+            xAxis={[
+              {
+                data: xLabels,
+                scaleType: 'band',
+                valueFormatter: date => format(parseISO(date), 'dd/MM/yyyy', {locale: fr}),
+                tickLabelStyle: {
+                  angle: 45,
+                  textAnchor: 'start',
+                  fontSize: 12
+                }
               }
-            }
-          ]}
-          yAxis={[
-            {
-              min: 65,
-              max: Math.max(...volumeData, volumes.volumeJournalierMax || 0) + 5,
-              valueFormatter: volume => Number.parseFloat(volume).toLocaleString('fr-FR')
-            }
-          ]}
-          height={350}
-          margin={{
-            left: 60,
-            right: 20,
-            top: 20,
-            bottom: 70
-          }}
-          grid={{
-            vertical: true,
-            horizontal: true
-          }}
-          slotProps={{
-            legend: {
-              direction: 'row',
-              position: {vertical: 'top', horizontal: 'right'}
-            },
-            tooltip: {
-              filter: item => item.seriesId === 'series-0'
-            }
-          }}
-        >
-          {hasVolumeMax && (
-            <ChartsReferenceLine
-              y={volumes.volumeJournalierMax}
-              label={`Volume max: ${Number.parseFloat(volumes.volumeJournalierMax).toLocaleString('fr-FR')} m³`}
-              labelAlign='start'
-              lineStyle={{
-                stroke: '#ef4444',
-                strokeWidth: 2,
-                strokeDasharray: '5 5'
-              }}
-            />
-          )}
-        </LineChart>
+            ]}
+            yAxis={[
+              {
+                min: 65,
+                max: Math.max(...volumeData, volumes.volumeJournalierMax || 0) + 5,
+                valueFormatter: volume => Number.parseFloat(volume).toLocaleString('fr-FR')
+              }
+            ]}
+            height={350}
+            margin={{
+              left: 60,
+              right: 20,
+              top: 20,
+              bottom: 70
+            }}
+            grid={{
+              vertical: true,
+              horizontal: true
+            }}
+            slotProps={{
+              legend: {
+                direction: 'row',
+                position: {vertical: 'top', horizontal: 'right'}
+              },
+              tooltip: {
+                filter: item => item.seriesId === 'series-0'
+              }
+            }}
+          >
+            {hasVolumeMax && (
+              <ChartsReferenceLine
+                y={volumes.volumeJournalierMax}
+                label={`Volume max: ${Number.parseFloat(volumes.volumeJournalierMax).toLocaleString('fr-FR')} m³`}
+                labelAlign='start'
+                lineStyle={{
+                  stroke: '#ef4444',
+                  strokeWidth: 2,
+                  strokeDasharray: '5 5'
+                }}
+              />
+            )}
+          </LineChart>
+        )}
       </div>
       <div className='flex flex-columns justify-between'>
         <div className='mt-4 text-sm'>
