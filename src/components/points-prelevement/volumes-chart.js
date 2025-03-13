@@ -41,6 +41,8 @@ const VolumesChart = ({volumes, isLoading}) => {
   ]
 
   const hasVolumeMax = volumes.volumeJournalierMax !== null
+  const nbValeursRenseignees = showAll ? volumes.nbValeursRenseignees : displayData.length
+  const nbDepassements = showAll ? volumes.nbDepassements : displayData.filter(v => v.depassement).length
 
   return (
     <div className='w-full border-[1px] p-3'>
@@ -123,7 +125,7 @@ const VolumesChart = ({volumes, isLoading}) => {
             <p><b>Volume journalier maximum : </b>{volumes?.volumeJournalierMax} m³</p>
           )}
           <p>
-            <b>Nombre de dépassements : </b> {volumes.nbDepassements || 'non renseigné'} sur {volumes.nbValeursRenseignees} valeurs
+            <b>Nombre de dépassements : </b> {nbDepassements} sur {nbValeursRenseignees} valeurs
           </p>
         </div>
       </div>
