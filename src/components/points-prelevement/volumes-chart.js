@@ -27,7 +27,9 @@ const VolumesChart = ({volumes, isLoading}) => {
       color: '#2563eb',
       showMark: true,
       area: false,
-      valueFormatter: value => `${Number.parseFloat(value).toLocaleString('fr-FR')} m³`
+      valueFormatter(value) {
+        return value === null ? 'Non renseigné' : `${Number.parseFloat(value).toLocaleString('fr-FR')} m³`
+      }
     },
     {
       data: exceededData.map(item => item.volume),
