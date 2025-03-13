@@ -31,7 +31,7 @@ const VolumesChart = ({volumes, isLoading}) => {
     },
     {
       data: exceededData.map(item => item.volume),
-      color: 'rgb(239, 68, 68)',
+      color: '#ef4444',
       showMark: true,
       area: false,
       line: true,
