@@ -100,7 +100,7 @@ const VolumesChart = ({volumes}) => {
           {hasVolumeMax && (
             <ChartsReferenceLine
               y={volumes.volumeJournalierMax}
-              label={`Volume max: ${volumes.volumeJournalierMax} m³`}
+              label={`Volume max: ${Number.parseFloat(volumes.volumeJournalierMax).toLocaleString('fr-FR')} m³`}
               labelAlign='start'
               lineStyle={{
                 stroke: '#ef4444',
