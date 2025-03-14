@@ -33,13 +33,6 @@ const navigationItems = [
   },
   {
     linkProps: {
-      href: '/prelevements-deau',
-      target: '_self'
-    },
-    text: 'Prélèvements d’eau'
-  },
-  {
-    linkProps: {
       href: '/preleveurs',
       target: '_self'
     },
@@ -51,6 +44,13 @@ const navigationItems = [
       target: '_self'
     },
     text: 'Points de prélèvement'
+  },
+  {
+    linkProps: {
+      href: '/statistiques',
+      target: '_self'
+    },
+    text: 'Statistiques'
   }
 ]
 
