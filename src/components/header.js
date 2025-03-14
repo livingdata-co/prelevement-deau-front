@@ -16,7 +16,7 @@ const navigationItems = [
   },
   {
     linkProps: {
-      href: '/points-prelevement',
+      href: '/prelevements',
       target: '_self'
     },
     text: 'Prélèvements'
