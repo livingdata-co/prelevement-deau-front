@@ -10,7 +10,7 @@ const Pie = ({data, height, width}) => (
         arcLabel: item => item.value ?? ''
       }
     ]}
-    width={width || 400}
+    width={width || 500}
     height={height || 300}
     margin={{right: 150}}
   />
