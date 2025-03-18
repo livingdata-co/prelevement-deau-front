@@ -15,6 +15,20 @@ const navigationItems = [
     text: 'Accueil'
   },
   {
+    linkProps: {
+      href: '/prelevements',
+      target: '_self'
+    },
+    text: 'Prélèvements'
+  },
+  {
+    linkProps: {
+      href: '/preleveurs',
+      target: '_self'
+    },
+    text: 'Préleveurs'
+  },
+  {
     menuLinks: [
       {
         linkProps: {
@@ -29,21 +43,7 @@ const navigationItems = [
         text: 'Validateur de fichier'
       }
     ],
-    text: 'Démarches simplifiées'
-  },
-  {
-    linkProps: {
-      href: '/preleveurs',
-      target: '_self'
-    },
-    text: 'Préleveurs'
-  },
-  {
-    linkProps: {
-      href: '/points-prelevement',
-      target: '_self'
-    },
-    text: 'Points de prélèvement'
+    text: 'Déclarations'
   },
   {
     linkProps: {
