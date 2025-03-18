@@ -7,14 +7,14 @@ import {BarChart} from '@mui/x-charts/BarChart'
 
 function getColorForNature(index) {
   const colors = [
-    fr.colors.decisions.artwork.major.blueFrance.active,
-    fr.colors.decisions.artwork.major.greenTilleulVerveine.active,
-    fr.colors.decisions.artwork.major.redMarianne.active,
-    fr.colors.decisions.artwork.major.orangeTerreBattue.active,
-    fr.colors.decisions.artwork.major.purpleGlycine.active,
-    fr.colors.decisions.artwork.major.blueCumulus.active,
-    fr.colors.decisions.artwork.major.brownCaramel.active,
-    fr.colors.decisions.artwork.major.blueEcume.active
+    fr.colors.decisions.artwork.major.greenTilleulVerveine.hover,
+    fr.colors.decisions.artwork.major.greenBourgeon.hover,
+    fr.colors.decisions.artwork.major.greenEmeraude.hover,
+    fr.colors.decisions.artwork.major.greenMenthe.hover,
+    fr.colors.decisions.artwork.major.greenArchipel.hover,
+    fr.colors.decisions.artwork.major.blueEcume.hover,
+    fr.colors.decisions.artwork.major.blueCumulus.hover,
+    fr.colors.decisions.artwork.major.purpleGlycine.hover
   ]
 
   return colors[index % colors.length]
