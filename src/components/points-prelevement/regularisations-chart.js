@@ -7,7 +7,7 @@ import {BarChart} from '@mui/x-charts/BarChart'
 
 function getColorForStatus(index) {
   const colors = [
-    fr.colors.decisions.artwork.major.blueFrance.active,
+    fr.colors.decisions.artwork.major.greenBourgeon.active,
     fr.colors.decisions.artwork.major.redMarianne.active
   ]
 
@@ -49,6 +49,11 @@ const RegularisationsCharts = ({data}) => {
             data: xAxisData,
             scaleType: 'band',
             label: 'Régime'
+          }
+        ]}
+        yAxis={[
+          {
+            label: 'Nombre exploitations\n'
           }
         ]}
         height={450}
