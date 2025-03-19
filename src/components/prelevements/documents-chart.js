@@ -5,6 +5,8 @@ import {useMemo} from 'react'
 import {fr} from '@codegouvfr/react-dsfr'
 import {BarChart} from '@mui/x-charts/BarChart'
 
+import LegendChart from '@/components/prelevements/legend-chart.js'
+
 function getColorForNature(index) {
   const colors = [
     fr.colors.decisions.artwork.major.greenTilleulVerveine.hover,
@@ -47,9 +49,14 @@ const DocumentChart = ({data}) => {
   }, [data])
 
   return (
-    <div style={{width: '100%', height: 500, marginTop: '1em'}}>
+    <div className='my-4'>
       <BarChart
         series={series}
+        slotProps={{
+          legend: {
+            hidden: true
+          }
+        }}
         xAxis={[
           {
             data: xAxisData,
@@ -64,6 +71,7 @@ const DocumentChart = ({data}) => {
         ]}
         height={450}
       />
+      <LegendChart series={series} />
     </div>
   )
 }
