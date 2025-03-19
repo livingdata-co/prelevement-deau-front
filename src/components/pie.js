@@ -6,6 +6,7 @@ const Pie = ({data, height, width}) => (
   <PieChart
     series={[
       {
+        highlightScope: {faded: 'global', highlighted: 'item'},
         data: [...data],
         arcLabel: item => item.value ?? ''
       }
