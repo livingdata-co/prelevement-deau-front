@@ -108,6 +108,11 @@ const Home = async () => {
           </Box>
         </Box>
       </Box>
+      <Box className='w-full flex justify-center p-12'>
+        <Link href='/statistiques' className='fr-btn fr-btn--secondary'>
+          Afficher plus de statistiques
+        </Link>
+      </Box>
     </Box>
   )
 }
