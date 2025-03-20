@@ -44,6 +44,13 @@ const navigationItems = [
       }
     ],
     text: 'Déclarations'
+  },
+  {
+    linkProps: {
+      href: '/statistiques',
+      target: '_self'
+    },
+    text: 'Statistiques'
   }
 ]
 
