@@ -28,6 +28,7 @@ const VolumesChart = ({volumes, isLoading}) => {
       color: frColors.colors.decisions.artwork.major.blueFrance.active,
       showMark: true,
       area: false,
+      curve: 'linear',
       valueFormatter(value) {
         return value ? `${Number.parseFloat(value).toLocaleString('fr-FR')} m³` : 'Non renseigné'
       }
@@ -37,7 +38,7 @@ const VolumesChart = ({volumes, isLoading}) => {
       color: frColors.colors.decisions.artwork.major.redMarianne.active,
       showMark: true,
       area: false,
-      line: true,
+      curve: 'linear',
       // Masque la valeur affichée dans le tooltip, valeur déjà affichée avec la première série.
       valueFormatter: () => null
     }
