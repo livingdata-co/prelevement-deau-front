@@ -11,6 +11,7 @@ export const config = {
     '/dossiers',
     '/prelevements',
     '/preleveurs',
-    '/validateur'
+    '/validateur',
+    '/statistiques'
   ]
 }
