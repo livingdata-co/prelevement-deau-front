@@ -26,7 +26,10 @@ const PreleveursList = ({preleveurs}) => {
         id: 'id_beneficiaire',
         index: ['nom', 'prenom', 'raison_sociale', 'sigle'],
         store: true
-      }
+      },
+      tokenize: 'forward',
+      suggest: true,
+      depth: 2
     })
 
     for (const preleveur of preleveurs) {
@@ -46,15 +49,22 @@ const PreleveursList = ({preleveurs}) => {
   }, [preleveurs])
 
   const handleFilter = e => {
-    const results = index.current.search(e.target.value.toLowerCase())
+    const query = e.target.value.toLowerCase()
+    const results = index.current.search(query, {
+      suggest: true,
+      limit: 10,
+      enrich: true
+    })
     const newPreleveurs = []
 
-    if (results.length > 0) {
+    if (query.length > 0 && results.length > 0) {
       for (const r of results) {
-        const {result} = r
-        for (const r of result) {
-          const newPreleveur = preleveurs.find(p => p.id_beneficiaire === r)
-          newPreleveurs.push(newPreleveur)
+        for (const doc of r.result) {
+          const newPreleveur = preleveurs.find(p => p.id_beneficiaire === doc.id)
+
+          if (newPreleveur && !newPreleveurs.some(p => p.id_beneficiaire === newPreleveur.id_beneficiaire)) {
+            newPreleveurs.push(newPreleveur)
+          }
         }
       }
 
