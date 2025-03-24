@@ -3,6 +3,7 @@
 import {useMemo} from 'react'
 
 import {fr} from '@codegouvfr/react-dsfr'
+import {Paper} from '@mui/material'
 import {BarChart} from '@mui/x-charts/BarChart'
 
 import LegendChart from '@/components/prelevements/legend-chart.js'
@@ -21,6 +22,38 @@ function getColorForNature(index) {
 
   return colors[index % colors.length]
 }
+
+const CustomTooltip = e => (
+  <Paper
+    elevation={2}
+    style={{
+      padding: '.5em 1em'
+    }}
+  >
+    <p className='p-2 border-b mb-2'>
+      {e.axisValue}
+    </p>
+    {e.series
+      .filter(s => s.data[e.dataIndex] !== 0)
+      .map(s => (
+        <div
+          key={s.label}
+          className='flex justify-between'
+        >
+          <span className='flex items-center'>
+            <div
+              className='w-2 h-2 rounded-full mr-3'
+              style={{
+                backgroundColor: s.color
+              }}
+            />
+            <span className='mr-10'>{s.label}</span>
+          </span>
+          <span>{s.data[e.dataIndex]}</span>
+        </div>
+      ))}
+  </Paper>
+)
 
 const DocumentChart = ({data}) => {
   const {xAxisData, series} = useMemo(() => {
@@ -70,6 +103,9 @@ const DocumentChart = ({data}) => {
           }
         ]}
         height={450}
+        slots={{
+          axisContent: CustomTooltip
+        }}
       />
       <LegendChart series={series} />
     </div>
