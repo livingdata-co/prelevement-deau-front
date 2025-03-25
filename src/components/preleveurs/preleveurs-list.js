@@ -10,6 +10,7 @@ import {
   InputAdornment,
   TextField
 } from '@mui/material'
+import {deburr} from 'lodash-es'
 import Link from 'next/link'
 
 import FlexSearch from '../../../node_modules/flexsearch/dist/flexsearch.bundle.module.min.js'
@@ -37,9 +38,9 @@ const PreleveursList = ({preleveurs}) => {
         preleveur.id_beneficiaire,
         {
           idBeneficiaire: preleveur.id_beneficiaire.toString(),
-          nom: preleveur.nom?.toLowerCase(),
-          prenom: preleveur.prenom?.toLowerCase(),
-          raison_sociale: preleveur.raison_sociale?.toLowerCase(), // eslint-disable-line camelcase
+          nom: deburr(preleveur.nom?.toLowerCase()),
+          prenom: deburr(preleveur.prenom?.toLowerCase()),
+          raison_sociale: deburr(preleveur.raison_sociale?.toLowerCase()), // eslint-disable-line camelcase
           sigle: preleveur.sigle?.toLowerCase()
         }
       )
@@ -49,29 +50,38 @@ const PreleveursList = ({preleveurs}) => {
   }, [preleveurs])
 
   const handleFilter = e => {
-    const query = e.target.value.toLowerCase()
+    const query = deburr(e.target.value.toLowerCase())
     const results = index.current.search(query, {
       suggest: true,
       limit: 10,
       enrich: true
     })
+
+    if (query.length === 0) {
+      setFilteredPreleveurs(preleveurs)
+      return
+    }
+
+    if (results.length === 0) {
+      setFilteredPreleveurs([])
+      return
+    }
+
     const newPreleveurs = []
+    const seenIds = new Set()
 
-    if (query.length > 0 && results.length > 0) {
-      for (const r of results) {
-        for (const doc of r.result) {
-          const newPreleveur = preleveurs.find(p => p.id_beneficiaire === doc.id)
+    for (const r of results) {
+      for (const doc of r.result) {
+        const newPreleveur = preleveurs.find(p => p.id_beneficiaire === doc.id)
 
-          if (newPreleveur && !newPreleveurs.some(p => p.id_beneficiaire === newPreleveur.id_beneficiaire)) {
-            newPreleveurs.push(newPreleveur)
-          }
+        if (newPreleveur && !seenIds.has(newPreleveur.id_beneficiaire)) {
+          newPreleveurs.push(newPreleveur)
+          seenIds.add(newPreleveur.id_beneficiaire)
         }
       }
-
-      setFilteredPreleveurs(newPreleveurs)
-    } else {
-      setFilteredPreleveurs(preleveurs)
     }
+
+    setFilteredPreleveurs(newPreleveurs)
   }
 
   return (
@@ -89,7 +99,7 @@ const PreleveursList = ({preleveurs}) => {
         }}
         onChange={handleFilter}
       />
-      {filteredPreleveurs.map((preleveur, index) => (
+      {filteredPreleveurs.length > 0 && filteredPreleveurs.map((preleveur, index) => (
         <Box
           key={preleveur.id_beneficiaire}
           className='fr-p-2w flex justify-between items-center flex-wrap'
@@ -117,6 +127,9 @@ const PreleveursList = ({preleveurs}) => {
           </div>
         </Box>
       ))}
+      {filteredPreleveurs.length === 0 && (
+        <Box className='p-3'>Aucun résultat</Box>
+      )}
     </Box>
   )
 }
