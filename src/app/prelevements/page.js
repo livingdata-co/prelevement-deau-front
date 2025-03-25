@@ -25,6 +25,7 @@ import PointSidePanel from '@/components/map/point-side-panel.js'
 import PointsListHeader from '@/components/map/points-list-header.js'
 import PointsList from '@/components/map/points-list.js'
 import useEvent from '@/hook/use-event.js'
+import {downloadCsv} from '@/lib/export-csv.js'
 import {extractTypeMilieu, extractUsages} from '@/lib/points-prelevement.js'
 
 const Page = () => {
@@ -121,6 +122,12 @@ const Page = () => {
     }
   }, [pointId, points])
 
+  const exportPointsList = () => {
+    const result = points.filter(p => filteredPoints.includes(p.id_point))
+
+    downloadCsv(result, 'points-prelevements-export.csv')
+  }
+
   return (
     <SidePanelLayout
       header={
@@ -135,6 +142,7 @@ const Page = () => {
             filters={filters}
             typeMilieuOptions={typeMilieuOptions}
             usagesOptions={usagesOptions}
+            exportList={exportPointsList}
             onFilter={handleFilter}
           />
         )
