@@ -10,12 +10,12 @@ import {
   InputAdornment,
   TextField
 } from '@mui/material'
-import {deburr} from 'lodash-es'
 import Link from 'next/link'
 
 import FlexSearch from '../../../node_modules/flexsearch/dist/flexsearch.bundle.module.min.js'
 
 import {getUsagesColors} from '@/components/map/legend-colors.js'
+import {normalizeString} from '@/utils/string.js'
 
 const PreleveursList = ({preleveurs}) => {
   const [filteredPreleveurs, setFilteredPreleveurs] = useState(preleveurs)
@@ -38,10 +38,10 @@ const PreleveursList = ({preleveurs}) => {
         preleveur.id_beneficiaire,
         {
           idBeneficiaire: preleveur.id_beneficiaire.toString(),
-          nom: deburr(preleveur.nom?.toLowerCase()),
-          prenom: deburr(preleveur.prenom?.toLowerCase()),
-          raison_sociale: deburr(preleveur.raison_sociale?.toLowerCase()), // eslint-disable-line camelcase
-          sigle: preleveur.sigle?.toLowerCase()
+          nom: normalizeString(preleveur.nom),
+          prenom: normalizeString(preleveur.prenom),
+          raison_sociale: normalizeString(preleveur.raison_sociale), // eslint-disable-line camelcase
+          sigle: normalizeString(preleveur.sigle)
         }
       )
     }
@@ -50,7 +50,7 @@ const PreleveursList = ({preleveurs}) => {
   }, [preleveurs])
 
   const handleFilter = e => {
-    const query = deburr(e.target.value.toLowerCase())
+    const query = normalizeString(e.target.value)
     const results = index.current.search(query, {
       suggest: true,
       limit: 10,
