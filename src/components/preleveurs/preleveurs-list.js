@@ -28,7 +28,7 @@ const PreleveursList = ({preleveurs}) => {
         index: ['nom', 'prenom', 'raison_sociale', 'sigle'],
         store: true
       },
-      tokenize: 'forward',
+      tokenize: 'full',
       suggest: true,
       depth: 2
     })
@@ -54,7 +54,9 @@ const PreleveursList = ({preleveurs}) => {
     const results = index.current.search(query, {
       suggest: true,
       limit: 10,
-      enrich: true
+      enrich: true,
+      bool: 'or',
+      threshold: 5
     })
 
     if (query.length === 0) {
