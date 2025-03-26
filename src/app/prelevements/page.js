@@ -91,13 +91,29 @@ const Page = () => {
       let matches = true
 
       if (filters.name) {
-        // Normalisation de la chaîne de recherche et du nom du point
+        // Normalisation de la chaîne de recherche
         const normalizedSearch = deburr(filters.name.toLowerCase().trim())
+
+        // Normalisation des valeurs à comparer
         const normalizedName = point.nom ? deburr(point.nom.toLowerCase().trim()) : ''
-        // Conversion de l'id_point en chaîne de caractères
         const idPointStr = String(point.id_point).toLowerCase()
-        // Le matching est positif si le texte est inclus dans le nom ou dans l'id_point
-        matches &&= normalizedName.includes(normalizedSearch) || idPointStr.includes(normalizedSearch)
+        const beneficiaireMatches = point.beneficiaires.some(beneficiaire => {
+          const normalizedRaisonSociale = beneficiaire.raison_sociale ? deburr(beneficiaire.raison_sociale.toLowerCase().trim()) : ''
+          const normalizedSigle = beneficiaire.sigle ? deburr(beneficiaire.sigle.toLowerCase().trim()) : ''
+          const normalizedNom = beneficiaire.nom ? deburr(beneficiaire.nom.toLowerCase().trim()) : ''
+          const normalizedPrenom = beneficiaire.prenom ? deburr(beneficiaire.prenom.toLowerCase().trim()) : ''
+
+          return (
+            normalizedRaisonSociale.includes(normalizedSearch)
+              || normalizedSigle.includes(normalizedSearch)
+              || normalizedNom.includes(normalizedSearch)
+              || normalizedPrenom.includes(normalizedSearch)
+          )
+        })
+
+        matches &&= normalizedName.includes(normalizedSearch)
+          || idPointStr.includes(normalizedSearch)
+          || beneficiaireMatches
       }
 
       if (filters.typeMilieu) {
