@@ -1,5 +1,9 @@
 import {deburr} from 'lodash-es'
 
 export function normalizeString(string) {
-  return deburr(string?.toLowerCase())
+  if (!string) {
+    return string
+  }
+
+  return deburr(string.toLowerCase())
 }
