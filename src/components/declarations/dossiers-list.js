@@ -13,6 +13,7 @@ import DossierModal from '@/components/declarations/dossier-modal.js'
 import DossierStateBadge from '@/components/declarations/dossier-state-badge.js'
 import PrelevementTypeBadge from '@/components/declarations/prelevement-type-badge.js'
 import TypeSaisieBadge from '@/components/declarations/type-saisie-badge.js'
+import {normalizeName} from '@/utils/string.js'
 
 const modal = createModal({
   id: 'invalid-dossiers-modal',
@@ -32,10 +33,6 @@ const convertDossierToRow = dossier => ({
   numeroArreteAot: dossier.numeroArreteAot,
   typeDonnees: dossier.typeDonnees
 })
-
-function getDeclarantName(declarant) {
-  return declarant.raisonSociale || declarant.nom
-}
 
 function renderErrorsCount({field, row}) {
   const value = row[field]
@@ -81,8 +78,13 @@ const DossiersList = ({dossiers}) => {
             field: 'declarant',
             headerName: 'Déclarant',
             width: 300,
-            sortComparator: (a, b) => getDeclarantName(a).localeCompare(getDeclarantName(b)),
-            valueFormatter: ({raisonSociale, nom, prenom}) => raisonSociale || `${nom.toUpperCase()} ${prenom}`
+            renderCell({row}) {
+              return (
+                row.declarant?.raisonSociale
+                  || `${normalizeName(row.declarant.nom)} ${normalizeName(row.declarant.prenom)}`
+              )
+            },
+            valueGetter: params => params && params.raisonSociale ? params.raisonSociale : `${params.nom} ${params.prenom}`
           },
           {
             field: 'typePrelevement',
