@@ -8,6 +8,7 @@ import {Tooltip} from '@mui/material'
 import {DataGrid, GridToolbar} from '@mui/x-data-grid'
 import {frFR} from '@mui/x-data-grid/locales'
 import {format} from 'date-fns'
+import {deburr} from 'lodash-es'
 
 import DossierModal from '@/components/declarations/dossier-modal.js'
 import DossierStateBadge from '@/components/declarations/dossier-state-badge.js'
@@ -84,7 +85,9 @@ const DossiersList = ({dossiers}) => {
                   || `${normalizeName(row.declarant.nom)} ${normalizeName(row.declarant.prenom)}`
               )
             },
-            valueGetter: params => params && params.raisonSociale ? params.raisonSociale : `${params.nom} ${params.prenom}`
+            valueGetter: params => params && params.raisonSociale
+              ? deburr(params.raisonSociale)
+              : `${deburr(params.nom)} ${deburr(params.prenom)}`
           },
           {
             field: 'typePrelevement',
