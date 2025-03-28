@@ -2,10 +2,7 @@
 
 import {useState, useEffect} from 'react'
 
-import {
-  getLibelleCommune,
-  getPointPrelevement
-} from '@/app/api/points-prelevement.js'
+import {getPointPrelevement} from '@/app/api/points-prelevement.js'
 import LoadingOverlay from '@/components/loading-overlay.js'
 import PointExploitations from '@/components/prelevements/point-exploitations.js'
 import PointIdentification from '@/components/prelevements/point-identification.js'
@@ -20,9 +17,6 @@ const PointLoader = ({id, selectedTab}) => {
     const fetchData = async () => {
       try {
         const pointData = await getPointPrelevement(id)
-        const commune = await getLibelleCommune(pointData.insee_com)
-
-        pointData.libelleCommune = commune?.nom || ''
 
         setPointPrelevement(pointData)
         setLoading(false)
