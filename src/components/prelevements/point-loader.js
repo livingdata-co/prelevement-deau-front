@@ -3,8 +3,6 @@
 import {useState, useEffect} from 'react'
 
 import {
-  getBnpe,
-  getBss,
   getLibelleCommune,
   getPointPrelevement
 } from '@/app/api/points-prelevement.js'
@@ -22,12 +20,8 @@ const PointLoader = ({id, selectedTab}) => {
     const fetchData = async () => {
       try {
         const pointData = await getPointPrelevement(id)
-        const bss = await getBss(pointData.id_bss)
-        const bnpe = await getBnpe(pointData.code_bnpe)
         const commune = await getLibelleCommune(pointData.insee_com)
 
-        pointData.lienBss = bss?.lien_infoterre || ''
-        pointData.lienBnpe = bnpe?.uri_ouvrage || ''
         pointData.libelleCommune = commune?.nom || ''
 
         setPointPrelevement(pointData)
