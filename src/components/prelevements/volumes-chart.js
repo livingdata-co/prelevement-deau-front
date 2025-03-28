@@ -13,7 +13,8 @@ import {fr} from 'date-fns/locale'
 
 import {getVolumesExploitation} from '@/app/api/points-prelevement.js'
 
-const VolumesChart = ({isLoading, idExploitation}) => {
+const VolumesChart = ({idExploitation}) => {
+  const [isLoading, setIsLoading] = useState(false)
   const [volumes, setVolumes] = useState({
     valeurs: [],
     volumeJournalierMax: 0,
@@ -61,10 +62,13 @@ const VolumesChart = ({isLoading, idExploitation}) => {
   useEffect(() => {
     async function getVolumes() {
       try {
+        setIsLoading(true)
         const volumes = await getVolumesExploitation(idExploitation)
         setVolumes(volumes)
+        setIsLoading(false)
       } catch (error) {
         console.error(error)
+        setIsLoading(false)
       }
     }
 

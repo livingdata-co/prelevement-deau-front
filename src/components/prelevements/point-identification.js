@@ -6,11 +6,9 @@ import {Box, Typography} from '@mui/material'
 import Link from 'next/link'
 
 import {getBnpe, getBss} from '@/app/api/points-prelevement.js'
-import LoadingOverlay from '@/components/loading-overlay.js'
 import {formatAutresNoms} from '@/lib/points-prelevement.js'
 
 const PointIdentification = ({pointPrelevement}) => {
-  const [isLoading, setIsLoading] = useState(false)
   const [lienBss, setLienBss] = useState()
   const [lienBnpe, setLienBnpe] = useState()
   const {id_point: idPoint, nom, autres_noms: autresNoms} = pointPrelevement
@@ -18,25 +16,18 @@ const PointIdentification = ({pointPrelevement}) => {
   useEffect(() => {
     const fetchInfos = async () => {
       try {
-        setIsLoading(true)
         const bss = await getBss(pointPrelevement.id_bss)
         const bnpe = await getBnpe(pointPrelevement.code_bnpe)
 
         setLienBss(bss?.lien_infoterre || '')
         setLienBnpe(bnpe?.uri_ouvrage || '')
-        setIsLoading(false)
       } catch (error) {
         console.error(error)
-        setIsLoading(false)
       }
     }
 
     fetchInfos()
   }, [pointPrelevement])
-
-  if (isLoading) {
-    return <LoadingOverlay />
-  }
 
   return (
     <Box sx={{m: 2, p: 3}}>

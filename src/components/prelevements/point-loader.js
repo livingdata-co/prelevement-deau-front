@@ -2,14 +2,23 @@
 
 import {useState, useEffect} from 'react'
 
+import {Box, CircularProgress} from '@mui/material'
+import dynamic from 'next/dynamic'
+
 import {getPointPrelevement} from '@/app/api/points-prelevement.js'
-import LoadingOverlay from '@/components/loading-overlay.js'
-import PointExploitations from '@/components/prelevements/point-exploitations.js'
-import PointIdentification from '@/components/prelevements/point-identification.js'
-import PointLocalistation from '@/components/prelevements/point-localisation.js'
+
+const PointIdentification = dynamic(
+  () => import('@/components/prelevements/point-identification.js')
+)
+const PointLocalistation = dynamic(
+  () => import('@/components/prelevements/point-localisation.js')
+)
+const PointExploitations = dynamic(
+  () => import('@/components/prelevements/point-exploitations.js')
+)
 
 const PointLoader = ({id, selectedTab}) => {
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [pointPrelevement, setPointPrelevement] = useState(null)
 
   useEffect(() => {
@@ -18,18 +27,22 @@ const PointLoader = ({id, selectedTab}) => {
         const pointData = await getPointPrelevement(id)
 
         setPointPrelevement(pointData)
-        setLoading(false)
+        setIsLoading(false)
       } catch (error) {
         console.error('Erreur lors du chargement des données :', error)
-        setLoading(false)
+        setIsLoading(false)
       }
     }
 
     fetchData()
   }, [id])
 
-  if (loading) {
-    return <LoadingOverlay />
+  if (isLoading) {
+    return (
+      <Box className='flex w-full justify-center'>
+        <CircularProgress />
+      </Box>
+    )
   }
 
   return (

@@ -3,7 +3,6 @@ import {useEffect, useState} from 'react'
 import {Box, Chip, Typography} from '@mui/material'
 
 import {getLibelleCommune} from '@/app/api/points-prelevement.js'
-import LoadingOverlay from '@/components/loading-overlay.js'
 
 const LabelValue = ({label, value}) => {
   if (value) {
@@ -17,29 +16,21 @@ const LabelValue = ({label, value}) => {
 }
 
 const PointLocalistation = ({pointPrelevement}) => {
-  const [isLoading, setIsLoading] = useState(false)
   const [libelleCommune, setLibelleCommune] = useState()
 
   useEffect(() => {
     const fetchLibelle = async () => {
       try {
-        setIsLoading(true)
         const commune = await getLibelleCommune(pointPrelevement.insee_com)
 
         setLibelleCommune(commune?.nom || '')
-        setIsLoading(false)
       } catch (error) {
         console.error(error)
-        setIsLoading(false)
       }
     }
 
     fetchLibelle()
   }, [pointPrelevement])
-
-  if (isLoading) {
-    return <LoadingOverlay />
-  }
 
   return (
     <Box sx={{m: 2, p: 3}}>
