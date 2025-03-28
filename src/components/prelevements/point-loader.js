@@ -7,7 +7,6 @@ import LoadingOverlay from '@/components/loading-overlay.js'
 import PointExploitations from '@/components/prelevements/point-exploitations.js'
 import PointIdentification from '@/components/prelevements/point-identification.js'
 import PointLocalistation from '@/components/prelevements/point-localisation.js'
-import PointTabs from '@/components/prelevements/point-tabs.js'
 
 const PointLoader = ({id, selectedTab}) => {
   const [loading, setLoading] = useState(true)
@@ -35,7 +34,6 @@ const PointLoader = ({id, selectedTab}) => {
 
   return (
     <>
-      <PointTabs selectedTab={selectedTab} />
       {selectedTab === 'identification' && (
         <PointIdentification pointPrelevement={pointPrelevement} />
       )}
