@@ -3,10 +3,8 @@
 import {useState, useEffect} from 'react'
 
 import {
-  getBeneficiaire,
   getBnpe,
   getBss,
-  getExploitationsFromPointId,
   getLibelleCommune,
   getPointPrelevement
 } from '@/app/api/points-prelevement.js'
@@ -27,22 +25,10 @@ const PointLoader = ({id, selectedTab}) => {
         const bss = await getBss(pointData.id_bss)
         const bnpe = await getBnpe(pointData.code_bnpe)
         const commune = await getLibelleCommune(pointData.insee_com)
-        const exploitations = await getExploitationsFromPointId(pointData.id_point)
-
-        const exploitationsWithBeneficiaires = await Promise.all(
-          exploitations.map(async exploitation => {
-            const beneficiaire = await getBeneficiaire(exploitation.id_beneficiaire)
-            return {
-              ...exploitation,
-              beneficiaire
-            }
-          })
-        )
 
         pointData.lienBss = bss?.lien_infoterre || ''
         pointData.lienBnpe = bnpe?.uri_ouvrage || ''
         pointData.libelleCommune = commune?.nom || ''
-        pointData.exploitations = exploitationsWithBeneficiaires
 
         setPointPrelevement(pointData)
         setLoading(false)
