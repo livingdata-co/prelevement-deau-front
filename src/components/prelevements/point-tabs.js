@@ -2,7 +2,9 @@
 
 import {useEffect, useState} from 'react'
 
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import {Tab, Tabs} from '@mui/material'
+import Link from 'next/link'
 import {useRouter, useParams, usePathname} from 'next/navigation'
 
 const PointTabs = () => {
@@ -27,16 +29,24 @@ const PointTabs = () => {
   }, [url])
 
   return (
-    <Tabs
-      value={path}
-      variant='scrollable'
-      scrollButtons='auto'
-      onChange={handleClick}
-    >
-      <Tab value='identification' label='Identification' />
-      <Tab value='localisation' label='Localisation' />
-      <Tab value='exploitations' label='Exploitations' />
-    </Tabs>
+    <>
+      <div className='pt-5 pl-5'>
+        <ArrowBackIcon className='pr-1' />
+        <Link href={`/prelevements?point-prelevement=${id}`}>Retour</Link>
+      </div>
+      <div className='fr-container'>
+        <Tabs
+          value={path}
+          variant='scrollable'
+          scrollButtons='auto'
+          onChange={handleClick}
+        >
+          <Tab value='identification' label='Identification' />
+          <Tab value='localisation' label='Localisation' />
+          <Tab value='exploitations' label='Exploitations' />
+        </Tabs>
+      </div>
+    </>
   )
 }
 
