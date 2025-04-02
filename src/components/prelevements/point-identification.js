@@ -3,10 +3,10 @@ import Launch from '@mui/icons-material/Launch'
 import {Box, Typography} from '@mui/material'
 import Link from 'next/link'
 
-import {formatAutresNoms} from '../../lib/points-prelevement.js'
+import {formatAutresNoms} from '@/lib/points-prelevement.js'
 
-const PointIdentification = ({pointPrelevement}) => {
-  const {id_point: idPoint, nom, autres_noms: autresNoms, lienBss, lienBnpe} = pointPrelevement
+const PointIdentification = ({pointPrelevement, lienBss, lienBnpe}) => {
+  const {id_point: idPoint, nom, autres_noms: autresNoms} = pointPrelevement
 
   return (
     <Box sx={{m: 2, p: 3}}>

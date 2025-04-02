@@ -1,3 +1,4 @@
+
 import {Box, Chip, Typography} from '@mui/material'
 
 const LabelValue = ({label, value}) => {
@@ -11,13 +12,13 @@ const LabelValue = ({label, value}) => {
   }
 }
 
-const PointLocalistation = ({pointPrelevement}) => (
+const PointLocalistation = ({pointPrelevement, libelleCommune}) => (
   <Box sx={{m: 2, p: 3}}>
     <Typography
       gutterBottom
       variant='h3'
     >
-      {pointPrelevement.libelleCommune} - {pointPrelevement.insee_com}
+      {libelleCommune} - {pointPrelevement.insee_com}
     </Typography>
     <LabelValue label='Détails de localisation' value={pointPrelevement.detail_localisation} />
     <LabelValue label='Précision géométrique' value={pointPrelevement.precision_geom} />
