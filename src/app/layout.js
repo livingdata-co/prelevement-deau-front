@@ -1,13 +1,12 @@
 import MuiDsfrThemeProvider from '@codegouvfr/react-dsfr/mui'
-import {DsfrHead} from '@codegouvfr/react-dsfr/next-appdir/DsfrHead'
-import {DsfrProvider} from '@codegouvfr/react-dsfr/next-appdir/DsfrProvider'
-import {getHtmlAttributes} from '@codegouvfr/react-dsfr/next-appdir/getHtmlAttributes'
 import {AppRouterCacheProvider} from '@mui/material-nextjs/v13-appRouter'
 import Link from 'next/link'
 import {getServerSession} from 'next-auth'
 
-import {defaultColorScheme} from '@/app/default-color-scheme.js'
-import {StartDsfr} from '@/app/start-dsfr.js'
+import {defaultColorScheme} from '../dsfr-bootstrap/default-color-scheme.js'
+import {StartDsfrOnHydration, DsfrProvider} from '../dsfr-bootstrap/index.js'
+import {getHtmlAttributes, DsfrHead} from '../dsfr-bootstrap/server-only-index.js'
+
 import Footer from '@/components/footer.js'
 import Header from '@/components/header.js'
 
@@ -25,19 +24,12 @@ const RootLayout = async ({children}) => {
   return (
     <html {...getHtmlAttributes({defaultColorScheme})} >
       <head>
-        <StartDsfr />
+        <StartDsfrOnHydration />
         <DsfrHead Link={Link}
           preloadFonts={[
-            // "Marianne-Light",
-            // "Marianne-Light_Italic",
             'Marianne-Regular',
-            // "Marianne-Regular_Italic",
             'Marianne-Medium',
-            // "Marianne-Medium_Italic",
             'Marianne-Bold'
-            // "Marianne-Bold_Italic",
-            // "Spectral-Regular",
-            // "Spectral-ExtraBold"
           ]}
         />
       </head>
