@@ -17,7 +17,6 @@ import {
 import Link from 'next/link.js'
 
 import ExploitationAccordion from '../exploitation-accordion.js'
-import ExploitationDialog from '../exploitation-dialog.js'
 
 import {getExploitationsByPointId} from '@/app/api/points-prelevement.js'
 import {formatAutresNoms} from '@/lib/points-prelevement.js'
@@ -31,23 +30,7 @@ const SectionTitle = ({title}) => (
 )
 
 const PointSidePanel = ({point}) => {
-  // État local pour gérer l’ouverture/fermeture de la modale
-  const [openModal, setOpenModal] = useState(false)
-  // Stocke l’exploitation sélectionnée dont on veut afficher les règles
-  const [selectedExploitation, setSelectedExploitation] = useState(null)
   const [exploitations, setExploitations] = useState([])
-
-  // Ouverture de la modale pour une exploitation donnée
-  const handleOpenModal = exploitation => {
-    setSelectedExploitation(exploitation)
-    setOpenModal(true)
-  }
-
-  // Fermeture de la modale
-  const handleCloseModal = () => {
-    setOpenModal(false)
-    setSelectedExploitation(null)
-  }
 
   useEffect(() => {
     async function fetchExploitations() {
@@ -118,10 +101,11 @@ const PointSidePanel = ({point}) => {
           <strong>Réservoir biologique :</strong>{' '}
           {point.reservoir_biologique ? 'Oui' : 'Non'}
         </Typography>
-        <Typography sx={{pt: 1}}>
+        <Typography sx={{pt: 2}} variant='h6'>
           <Link href={`/prelevements/${point.id_point}/identification`}>
-            Plus d’informations <LaunchIcon />
+            <b>Plus d’informations</b>
           </Link>
+          <LaunchIcon sx={{ml: 1}} />
         </Typography>
       </Box>
 
@@ -133,9 +117,9 @@ const PointSidePanel = ({point}) => {
         <SectionTitle title='Préleveurs' />
 
         <Box sx={{ml: 2}}>
-          {point.beneficiaires && point.beneficiaires.length > 0 ? (
+          {point.preleveurs && point.preleveurs.length > 0 ? (
             <List>
-              {point.beneficiaires.map(b => {
+              {point.preleveurs.map(b => {
                 const label
                 = b.raison_sociale
                 || b.sigle
@@ -171,18 +155,10 @@ const PointSidePanel = ({point}) => {
           <ExploitationAccordion
             key={exploitation.id_exploitation}
             exploitation={exploitation}
-            beneficiaires={point.beneficiaires}
-            handleOpenModal={handleOpenModal}
+            preleveurs={point.preleveurs}
           />
         ))}
       </Box>
-
-      {/* ---------- MODALE RÈGLES & DOCUMENTS ---------- */}
-      <ExploitationDialog
-        openModal={openModal}
-        handleClose={handleCloseModal}
-        exploitation={selectedExploitation}
-      />
     </Box>
   )
 }
