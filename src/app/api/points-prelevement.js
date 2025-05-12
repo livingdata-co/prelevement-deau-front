@@ -1,5 +1,7 @@
+'use server'
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL
-const API_TOKEN = process.env.NEXT_PUBLIC_API_TOKEN
+const {API_TOKEN} = process.env
 
 const headers = {
   'Content-Type': 'application/json',
