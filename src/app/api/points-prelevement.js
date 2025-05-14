@@ -38,7 +38,7 @@ export async function getBeneficiaires() {
 
 export async function getPointsFromBeneficiaire(idBeneficiaire) {
   try {
-    const response = await fetch(`${API_URL}/api/beneficiaires/${idBeneficiaire}/points-prelevement`)
+    const response = await fetch(`${API_URL}/api/beneficiaires/${idBeneficiaire}/points-prelevement`, {headers})
     return response.json()
   } catch {
     return null
@@ -46,7 +46,7 @@ export async function getPointsFromBeneficiaire(idBeneficiaire) {
 }
 
 export async function getExploitationsByPointId(pointId) {
-  const response = await fetch(`${API_URL}/api/points-prelevement/${pointId}/exploitations`)
+  const response = await fetch(`${API_URL}/api/points-prelevement/${pointId}/exploitations`, {headers})
   const exploitations = await response.json()
   return exploitations
 }
@@ -59,7 +59,7 @@ export async function getStats() {
 }
 
 export async function getVolumesExploitation(exploitationId) {
-  const response = await fetch(`${API_URL}/api/exploitations/${exploitationId}/volumes-preleves`)
+  const response = await fetch(`${API_URL}/api/exploitations/${exploitationId}/volumes-preleves`, {headers})
   const volumes = await response.json()
   return volumes
 }
