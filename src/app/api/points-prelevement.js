@@ -20,7 +20,7 @@ export async function getPointPrelevement(id) {
 
 export async function getBeneficiaire(id) {
   try {
-    const response = await fetch(`${API_URL}/api/beneficiaires/${id}`)
+    const response = await fetch(`${API_URL}/api/beneficiaires/${id}`, {headers})
     return response.json()
   } catch {
     return null
@@ -29,7 +29,7 @@ export async function getBeneficiaire(id) {
 
 export async function getBeneficiaires() {
   try {
-    const response = await fetch(`${API_URL}/api/beneficiaires`)
+    const response = await fetch(`${API_URL}/api/beneficiaires`, {headers})
     return response.json()
   } catch {
     return null
