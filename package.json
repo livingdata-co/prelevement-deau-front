@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "update-icons": "rm -rf .next && yarn react-dsfr update-icons",
     "dev": "yarn react-dsfr update-icons && next dev",
     "build": "yarn react-dsfr update-icons && next build",
     "start": "next start",
