@@ -20,26 +20,27 @@ import {
 
 import {getFile} from '@/app/api/dossiers.js'
 import DossierCommentaire from '@/components/declarations/dossier/commentaire.js'
-import DeclarantDetails from '@/components/declarations/dossier/declarant-details.js'
-import DemandeurDetails from '@/components/declarations/dossier/demandeur-details.js'
 import FilesDetails from '@/components/declarations/dossier/files-details.js'
 import DossierInfos from '@/components/declarations/dossier/infos.js'
+import MandataireDetails from '@/components/declarations/dossier/mandataire-details.js'
 import PointPrelevementDetails from '@/components/declarations/dossier/point-prelevement-details.js'
 import PrelevementDetails from '@/components/declarations/dossier/prelevement-details.js'
+import PreleveurDetails from '@/components/declarations/dossier/preleveur-details.js'
 import FileValidationErrors from '@/components/declarations/file-validation-errors.js'
 
 const ModalSection = ({children}) => (
   <Box sx={{
     flex: 1,
-    p: 1,
-    backgroundColor: fr.colors.decisions.background.default.grey.hover
+    p: 2,
+    border: '1px solid',
+    borderColor: fr.colors.decisions.border.default.grey.default
   }}
   >
     {children}
   </Box>
 )
 
-const DossierDetails = ({dossier, pointPrelevement}) => {
+const DossierDetails = ({dossier, preleveur, pointPrelevement}) => {
   const [openFiles, setOpenFiles] = useState({})
 
   const toggleFile = useCallback(file => {
@@ -65,14 +66,14 @@ const DossierDetails = ({dossier, pointPrelevement}) => {
       <DossierInfos {...dossier} />
 
       <div className='flex flex-wrap gap-2'>
-        {dossier.demandeur && (
+        {(dossier.demandeur || preleveur) && (
           <ModalSection>
-            <DemandeurDetails {...dossier.demandeur} />
+            <PreleveurDetails preleveur={preleveur || dossier.demandeur} />
           </ModalSection>
         )}
-        {dossier.declarant.type !== 'particulier' && (
+        {dossier.declarant && dossier.declarant.type !== 'particulier' && (
           <ModalSection>
-            <DeclarantDetails {...dossier.declarant} />
+            <MandataireDetails mandataire={dossier.declarant} />
           </ModalSection>
         )}
       </div>

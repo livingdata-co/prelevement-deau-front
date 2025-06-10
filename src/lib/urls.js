@@ -9,3 +9,7 @@ export function getDossierDSURL(dossier) {
 export function getDossiersURL() {
   return '/dossiers'
 }
+
+export function getPreleveurURL(preleveur) {
+  return `/preleveurs/${preleveur.id_preleveur}`
+}
