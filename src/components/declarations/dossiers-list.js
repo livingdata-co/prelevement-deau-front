@@ -1,5 +1,7 @@
 'use client'
 
+import {useEffect, useState} from 'react'
+
 import {Badge} from '@codegouvfr/react-dsfr/Badge'
 import {Tooltip} from '@mui/material'
 import {DataGrid, GridToolbar} from '@mui/x-data-grid'
@@ -44,6 +46,15 @@ function renderDateCell(value) {
 
 const DossiersList = ({dossiers}) => {
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
 
   return (
     <div className='flex'>
