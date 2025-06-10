@@ -4,8 +4,7 @@ import {Typography} from '@mui/material'
 import {getDossier} from '@/app/api/dossiers.js'
 import {getPointPrelevement} from '@/app/api/points-prelevement.js'
 import DossierDetails from '@/components/declarations/dossier-details.js'
-import BackButton from '@/components/ui/back-button.js'
-import {getDossierDSURL, getDossiersURL} from '@/lib/urls.js'
+import {getDossierDSURL} from '@/lib/urls.js'
 
 const DossierPage = async ({params}) => {
   const {dossierId} = await params
@@ -18,14 +17,9 @@ const DossierPage = async ({params}) => {
   }
 
   return (
-    <div className='fr-container mt-4'>
-      <BackButton
-        label='Retour à la liste des dossiers'
-        href={getDossiersURL()}
-      />
-
-      <div className='flex items-end justify-between flex-wrap'>
-        <Typography className='text-center pt-10' variant='h3'>Dossier n°{dossier.numero}</Typography>
+    <>
+      <div className='flex justify-between flex-wrap'>
+        <Typography variant='h3'>Dossier n°{dossier.numero}</Typography>
         <Button
           linkProps={{
             href: getDossierDSURL(dossier),
@@ -42,7 +36,7 @@ const DossierPage = async ({params}) => {
           pointPrelevement={pointPrelevement}
         />
       </div>
-    </div>
+    </>
   )
 }
 
