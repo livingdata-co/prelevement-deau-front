@@ -1,25 +1,20 @@
-/* eslint-disable camelcase */
 'use client'
 
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 
 import Button from '@codegouvfr/react-dsfr/Button'
 import {Typography} from '@mui/material'
 import {useRouter} from 'next/navigation'
 
-import {createPointPrelevement} from '@/app/api/points-prelevement.js'
+import {editPointPrelevement} from '@/app/api/points-prelevement.js'
 import PointForm from '@/components/form/point-form.js'
 import {getCommuneFromCoords} from '@/lib/communes.js'
 import {emptyStringToNull} from '@/utils/string.js'
 
-const PointCreationForm = ({bnpeList, mesoList, meContinentalesBvList}) => {
+const PointEditionForm = ({pointPrelevement, bnpeList, mesoList, meContinentalesBvList}) => {
   const router = useRouter()
-  const [point, setPoint] = useState({
-    nom: '',
-    type_milieu: '',
-    precision_geom: ''
-  })
-  const [isDisabled, setIsDisabled] = useState(true)
+  const [payload, setPayload] = useState({})
+  const point = {...pointPrelevement}
   const [validationErrors, setValidationErrors] = useState([])
   const [error, setError] = useState(null)
 
@@ -28,8 +23,8 @@ const PointCreationForm = ({bnpeList, mesoList, meContinentalesBvList}) => {
     setValidationErrors([])
 
     try {
-      const cleanedPoint = emptyStringToNull(point)
-      const response = await createPointPrelevement(cleanedPoint)
+      const cleanedPayload = emptyStringToNull(payload)
+      const response = await editPointPrelevement(point.id_point, cleanedPayload)
 
       if (response.code === 400) {
         if (response.validationErrors) {
@@ -59,24 +54,20 @@ const PointCreationForm = ({bnpeList, mesoList, meContinentalesBvList}) => {
         return
       }
 
-      setPoint(prev => ({...prev, commune: commune.code, geom}))
+      setPayload(prev => ({...prev, commune: commune.code, geom}))
     } catch (error) {
       setError(error.message)
     }
   }
 
-  useEffect(() => {
-    setIsDisabled(!(point.nom && point.type_milieu && point.precision_geom && point.geom))
-  }, [point])
-
   return (
     <div className='fr-container'>
       <Typography variant='h3' sx={{pb: 5}}>
-        Création d&apos;un point de prélèvement
+        Édition du point de prélèvement {point.nom}
       </Typography>
       <PointForm
         point={point}
-        setPoint={setPoint}
+        setPoint={setPayload}
         handleSetGeom={handleSetGeom}
         bnpeList={bnpeList}
         meContinentalesBvList={meContinentalesBvList}
@@ -98,12 +89,12 @@ const PointCreationForm = ({bnpeList, mesoList, meContinentalesBvList}) => {
         </div>
       )}
       <div className='w-full flex justify-center p-5 mb-8'>
-        <Button disabled={isDisabled} onClick={handleSubmit}>
-          Valider la création du point de prélèvement
+        <Button onClick={handleSubmit}>
+          Valider les modifications sur le point de prélèvement {point.nom}
         </Button>
       </div>
     </div>
   )
 }
 
-export default PointCreationForm
+export default PointEditionForm
