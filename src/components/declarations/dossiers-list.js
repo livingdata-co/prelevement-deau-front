@@ -107,12 +107,13 @@ const DossiersList = ({dossiers}) => {
             field: 'status',
             headerName: 'État',
             renderCell: DossierStateBadge,
-            width: 180,
+            width: 200,
             filterable: true,
             type: 'singleSelect',
             valueOptions: [
               {value: 'accepte', label: 'Accepté'},
-              {value: 'en-instruction', label: 'En instruction'}
+              {value: 'en-instruction', label: 'En instruction'},
+              {value: 'en-construction', label: 'En construction'}
             ]
           },
           {

@@ -1,31 +1,24 @@
-import Alert from '@codegouvfr/react-dsfr/Alert'
-import Button from '@codegouvfr/react-dsfr/Button'
-import {Box, Typography} from '@mui/material'
+import {Box, Typography, Alert} from '@mui/material'
 
 import LabelWithIcon from '@/components/ui/label-with-icon.js'
+import SectionCard from '@/components/ui/section-card.js'
 import {getPreleveurURL} from '@/lib/urls.js'
 
 const PreleveurDetails = ({preleveur}) => (
-  <Box className='mt-2'>
-    <Box className='flex justify-between items-center mb-2'>
-      <Typography gutterBottom variant='h6' className='flex items-center gap-1'>
-        <Box className='flex items-center gap-2'>
-          <div className='fr-icon-user-line' />
-          Préleveur
-        </Box>
-      </Typography>
+  <SectionCard
+    title='Préleveur'
+    icon='fr-icon-user-line'
+    buttonProps={{
+      priority: 'secondary',
+      disabled: !preleveur.id_preleveur,
+      linkProps: preleveur.id_preleveur ? {
+        href: getPreleveurURL(preleveur),
+        target: '_blank'
+      } : undefined,
+      children: 'Consulter la fiche'
+    }}
+  >
 
-      <Button
-        priority='secondary'
-        disabled={!preleveur.id_preleveur}
-        linkProps={preleveur.id_preleveur ? {
-          href: getPreleveurURL(preleveur),
-          target: '_blank'
-        } : undefined}
-      >
-        Consulter la fiche
-      </Button>
-    </Box>
     <Typography
       color='primary'
       variant='h4'
@@ -52,10 +45,11 @@ const PreleveurDetails = ({preleveur}) => (
     {!preleveur.id_preleveur && (
       <Alert
         severity='warning'
-        description='Ce préleveur n’a pas pu être identifié'
-      />
+      >
+        Ce préleveur n’a pas pu être identifié.
+      </Alert>
     )}
-  </Box>
+  </SectionCard>
 )
 
 export default PreleveurDetails

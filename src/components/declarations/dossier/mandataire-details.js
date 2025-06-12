@@ -1,18 +1,13 @@
 import {Box, Typography} from '@mui/material'
 
 import LabelWithIcon from '@/components/ui/label-with-icon.js'
+import SectionCard from '@/components/ui/section-card.js'
 
 const MandataireDetails = ({mandataire}) => (
-  <Box className='mt-2'>
-    <Box className='flex justify-between items-center mb-2'>
-      <Typography gutterBottom variant='h6' className='flex items-center gap-1'>
-        <Box className='flex items-center gap-2'>
-          <div className='fr-icon-user-line' />
-          Mandataire
-        </Box>
-      </Typography>
-
-    </Box>
+  <SectionCard
+    title='Mandataire'
+    icon='fr-icon-user-line'
+  >
     <Typography
       color='primary'
       variant='h4'
@@ -35,7 +30,7 @@ const MandataireDetails = ({mandataire}) => (
         {mandataire.adresse}
       </LabelWithIcon>
     </Box>
-  </Box>
+  </SectionCard>
 )
 
 export default MandataireDetails

@@ -1,6 +1,8 @@
 'use client'
 
-import {useCallback, useState} from 'react'
+import {
+  useCallback, useEffect, useState, useRef
+} from 'react'
 
 import {fr} from '@codegouvfr/react-dsfr'
 import {Badge} from '@codegouvfr/react-dsfr/Badge'
@@ -19,12 +21,12 @@ import {
 } from '@mui/material'
 
 import {getFile} from '@/app/api/dossiers.js'
-import DossierCommentaire from '@/components/declarations/dossier/commentaire.js'
+import {getPointPrelevement} from '@/app/api/points-prelevement.js'
 import FilesDetails from '@/components/declarations/dossier/files-details.js'
 import DossierInfos from '@/components/declarations/dossier/infos.js'
 import MandataireDetails from '@/components/declarations/dossier/mandataire-details.js'
-import PointPrelevementDetails from '@/components/declarations/dossier/point-prelevement-details.js'
-import PrelevementDetails from '@/components/declarations/dossier/prelevement-details.js'
+import PointsPrelevementDetails from '@/components/declarations/dossier/points-prelevement-details.js'
+import PrelevementsDetails from '@/components/declarations/dossier/prelevements-details.js'
 import PreleveurDetails from '@/components/declarations/dossier/preleveur-details.js'
 import FileValidationErrors from '@/components/declarations/file-validation-errors.js'
 
@@ -40,20 +42,33 @@ const ModalSection = ({children}) => (
   </Box>
 )
 
-const DossierDetails = ({dossier, preleveur, pointPrelevement}) => {
+const DossierDetails = ({dossier, preleveur, idPoints}) => {
   const [openFiles, setOpenFiles] = useState({})
+  const [pointsPrelevement, setPointsPrelevement] = useState(null)
+  const [selectedPointId, setSelectedPointId] = useState(idPoints.length === 1 ? idPoints[0] : null)
+
+  const listRefs = useRef({})
+
+  useEffect(() => {
+    const fetchPointsPrelevement = async () => {
+      const points = await Promise.all(idPoints.map(idPoint => getPointPrelevement(idPoint)))
+      setPointsPrelevement(points.filter(point => point._id)) // Filtre 404 not found
+    }
+
+    fetchPointsPrelevement()
+  }, [idPoints])
 
   const toggleFile = useCallback(file => {
     setOpenFiles(prev => ({...prev, [file]: !prev[file]}))
   }, [])
 
-  const downloadFile = async ({checksum, filename}) => {
+  const downloadFile = async storageKey => {
     try {
-      const file = await getFile(dossier._id, checksum)
+      const file = await getFile(dossier._id, storageKey)
       const url = URL.createObjectURL(file)
       const a = document.createElement('a')
       a.href = url
-      a.download = filename
+      a.download = storageKey
       a.click()
       URL.revokeObjectURL(url)
     } catch (error) {
@@ -61,43 +76,60 @@ const DossierDetails = ({dossier, preleveur, pointPrelevement}) => {
     }
   }
 
+  const onClickPointPrelevementMarker = useCallback(id => {
+    setSelectedPointId(id)
+    const ref = listRefs.current[id]
+    if (ref) {
+      ref.scrollIntoView({behavior: 'smooth', block: 'start'})
+    }
+  }, [])
+
   return (
-    <Box className='flex flex-col gap-2'>
-      <DossierInfos {...dossier} />
+    <Box className='flex flex-col gap-2 mb-4'>
+      <DossierInfos
+        numeroArreteAot={dossier.numeroArreteAot}
+        typePrelevement={dossier.typePrelevement}
+        typeDonnees={dossier.typeDonnees}
+        commentaires={dossier.commentaires}
+      />
 
       <div className='flex flex-wrap gap-2'>
         {(dossier.demandeur || preleveur) && (
-          <ModalSection>
-            <PreleveurDetails preleveur={preleveur || dossier.demandeur} />
-          </ModalSection>
+          <PreleveurDetails preleveur={preleveur || dossier.demandeur} />
         )}
         {dossier.declarant && dossier.declarant.type !== 'particulier' && (
-          <ModalSection>
-            <MandataireDetails mandataire={dossier.declarant} />
-          </ModalSection>
+          <MandataireDetails mandataire={dossier.declarant} />
         )}
       </div>
 
-      {dossier.commentaires && (
-        <ModalSection>
-          <DossierCommentaire commentaire={dossier.commentaires} />
-        </ModalSection>
-      )}
+      <PointsPrelevementDetails
+        pointsPrelevementId={idPoints}
+        pointsPrelevement={pointsPrelevement}
+        handleClick={onClickPointPrelevementMarker}
+        selectedPointId={selectedPointId}
+      />
 
-      {pointPrelevement && (
-        <ModalSection>
-          <PointPrelevementDetails pointPrelevement={pointPrelevement} />
-        </ModalSection>
-      )}
-
-      <ModalSection>
-        <PrelevementDetails {...dossier} />
-      </ModalSection>
+      <PrelevementsDetails
+        idPoints={idPoints}
+        pointsPrelevement={pointsPrelevement}
+        selectedPointId={selectedPointId}
+        relevesIndex={dossier.relevesIndex}
+        volumesPompes={dossier.volumesPompes}
+        files={dossier.files}
+        compteur={dossier.compteur}
+        selectedPoint={idPoint => setSelectedPointId(prev => prev === idPoint ? null : idPoint)}
+        listRefs={listRefs}
+        handleDownload={downloadFile}
+      />
 
       {dossier.typeDonnees === 'tableur' && (
-        <ModalSection>
-          <FilesDetails {...dossier} handleDownload={downloadFile} />
-        </ModalSection>
+        <FilesDetails
+          extraitsRegistrePapier={dossier.extraitsRegistrePapier}
+          registrePrelevementsTableur={dossier.registrePrelevementsTableur}
+          tableauSuiviPrelevements={dossier.tableauSuiviPrelevements}
+          donneesPrelevements={dossier.donneesPrelevements}
+          handleDownload={downloadFile}
+        />
       )}
 
       {dossier.errorsCount > 0 && dossier.files.length > 0 && (
@@ -157,4 +189,3 @@ const DossierDetails = ({dossier, preleveur, pointPrelevement}) => {
 }
 
 export default DossierDetails
-

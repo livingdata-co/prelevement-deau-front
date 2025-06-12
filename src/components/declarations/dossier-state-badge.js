@@ -2,7 +2,8 @@ import {Badge} from '@codegouvfr/react-dsfr/Badge'
 
 const labels = {
   accepte: {severity: 'success', label: 'Accepté'},
-  'en-instruction': {severity: 'info', label: 'En instruction'}
+  'en-instruction': {severity: 'info', label: 'En instruction'},
+  'en-construction': {severity: 'new', label: 'En construction'}
 }
 
 const DossierStateBadge = ({value}) => {

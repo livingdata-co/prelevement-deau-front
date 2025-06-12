@@ -1,5 +1,4 @@
 import {Button} from '@codegouvfr/react-dsfr/Button'
-import {FolderOpen} from '@mui/icons-material'
 import {
   Box,
   Typography,
@@ -11,6 +10,8 @@ import {
   TableRow,
   Paper
 } from '@mui/material'
+
+import SectionCard from '@/components/ui/section-card.js'
 
 const FilesDetails = ({
   extraitsRegistrePapier,
@@ -60,14 +61,10 @@ const FilesDetails = ({
   }
 
   return (
-    <Box className='mt-4'>
-      <Box className='flex align-center gap-1'>
-        <FolderOpen />
-        <Typography gutterBottom variant='h6'>
-          Pièces justificatives
-        </Typography>
-      </Box>
-
+    <SectionCard
+      title='Pièces justificatives'
+      icon='fr-icon-folder-2-line'
+    >
       <Box className='mt-2'>
         {documents.length > 0 ? (
           <TableContainer component={Paper}>
@@ -104,7 +101,7 @@ const FilesDetails = ({
           </Typography>
         )}
       </Box>
-    </Box>
+    </SectionCard>
   )
 }
 

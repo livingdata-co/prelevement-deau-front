@@ -1,21 +1,33 @@
-import {Box, Typography} from '@mui/material'
+import {Notice} from '@codegouvfr/react-dsfr/Notice'
+import {Tag} from '@codegouvfr/react-dsfr/Tag'
+import {Box} from '@mui/material'
 
-import DossierStateBadge from '@/components/declarations/dossier-state-badge.js'
+import PrelevementTypeBadge from '@/components/declarations/prelevement-type-badge.js'
+import TypeSaisieBadge from '@/components/declarations/type-saisie-badge.js'
+import LabelValue from '@/components/ui/label-value.js'
 
-const DossierInfos = ({dateDepot, status}) => (
-  <Box className='flex justify-between mt-2'>
-    <Box className='flex flex-wrap gap-2'>
-      <Typography variant='body1' color='text.secondary'>
-        <strong>Date de dépôt:</strong>
-      </Typography>
-      <Typography variant='body1'>
-        {new Intl.DateTimeFormat('fr-FR', {dateStyle: 'short'}).format(new Date(dateDepot))}
-      </Typography>
-    </Box>
+const DossierInfos = ({numeroArreteAot, typePrelevement, typeDonnees, commentaires}) => (
+  <Box className='flex flex-col gap-2 my-4'>
+    <LabelValue label='Numéro AOT'>
+      {numeroArreteAot ? (
+        <Tag>{numeroArreteAot}</Tag>
+      ) : (
+        <i>Non renseigné</i>
+      )}
+    </LabelValue>
+    <LabelValue label='Type de prélèvement'>
+      <PrelevementTypeBadge value={typePrelevement} />
+    </LabelValue>
+    <LabelValue label='Type de saisie'>
+      <TypeSaisieBadge value={typeDonnees} />
+    </LabelValue>
 
-    <Box className='flex gap-2 mb-2'>
-      <DossierStateBadge value={status} />
-    </Box>
+    {commentaires && (
+      <Notice
+        description={commentaires}
+        severity='info'
+      />
+    )}
   </Box>
 )
 
