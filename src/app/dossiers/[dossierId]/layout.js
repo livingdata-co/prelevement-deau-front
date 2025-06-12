@@ -10,7 +10,7 @@ const DossierPage = async ({params, children}) => {
   return (
     <div className='fr-container mt-4'>
       <Breadcrumb
-        currentPageLabel={`Dossier n°${dossier.numero}`}
+        currentPageLabel={`Dossier n°${dossier.number}`}
         segments={[{
           label: 'Dossiers',
           linkProps: {

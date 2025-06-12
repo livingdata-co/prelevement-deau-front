@@ -5132,7 +5132,7 @@
       "filter": ["==","txt_typo","ADRESSE"],
       "layout": {
         "symbol-placement": "point",
-        "text-field": ["concat", ["get","numero"], ["get","indice_de_repetition"]],
+        "text-field": ["concat", ["get","number"], ["get","indice_de_repetition"]],
         "text-size": 11,
         "text-anchor": "center",
         "text-keep-upright": true,

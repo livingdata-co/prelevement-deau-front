@@ -18,7 +18,7 @@ import {normalizeName} from '@/utils/string.js'
 
 const convertDossierToRow = dossier => ({
   id: dossier._id,
-  numero: dossier.numero,
+  number: dossier.number,
   status: dossier.status,
   errorsCount: dossier.errorsCount,
   dateDepot: dossier.dateDepot ? new Date(dossier.dateDepot) : null,
@@ -72,7 +72,7 @@ const DossiersList = ({dossiers}) => {
           }
         }}
         columns={[
-          {field: 'numero', headerName: 'Numéro'},
+          {field: 'number', headerName: 'Numéro'},
           {field: 'numeroArreteAot', headerName: 'Numéro AOT', width: 120},
           {
             field: 'declarant',

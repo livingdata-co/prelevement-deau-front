@@ -26,7 +26,7 @@ const DossierPage = async ({params}) => {
   return (
     <>
       <div className='flex justify-between flex-wrap'>
-        <Typography variant='h3'>Dossier n°{dossier.numero}</Typography>
+        <Typography variant='h3'>Dossier n°{dossier.number}</Typography>
         <Button
           priority='secondary'
           linkProps={{
