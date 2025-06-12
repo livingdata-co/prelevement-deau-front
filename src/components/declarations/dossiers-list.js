@@ -2,7 +2,6 @@
 
 import {useEffect, useState} from 'react'
 
-import {Badge} from '@codegouvfr/react-dsfr/Badge'
 import {Tooltip} from '@mui/material'
 import {DataGrid, GridToolbar} from '@mui/x-data-grid'
 import {frFR} from '@mui/x-data-grid/locales'
@@ -20,7 +19,6 @@ const convertDossierToRow = dossier => ({
   id: dossier._id,
   number: dossier.number,
   status: dossier.status,
-  errorsCount: dossier.errorsCount,
   dateDepot: dossier.dateDepot ? new Date(dossier.dateDepot) : null,
   dateTraitement: dossier.dateTraitement ? new Date(dossier.dateTraitement) : null,
   typePrelevement: dossier.typePrelevement,
@@ -29,16 +27,6 @@ const convertDossierToRow = dossier => ({
   numeroArreteAot: dossier.numeroArreteAot,
   typeDonnees: dossier.typeDonnees
 })
-
-function renderErrorsCount({field, row}) {
-  const value = row[field]
-
-  if (value === 0) {
-    return null
-  }
-
-  return <Badge severity='error'>{value} Erreurs</Badge>
-}
 
 function renderDateCell(value) {
   return value ? format(new Date(value), 'dd/MM/yyyy') : '-'
@@ -126,14 +114,6 @@ const DossiersList = ({dossiers}) => {
               {value: 'accepte', label: 'Accepté'},
               {value: 'en-instruction', label: 'En instruction'}
             ]
-          },
-          {
-            field: 'errorsCount',
-            headerName: 'Erreurs détectées',
-            type: 'number',
-            renderCell: renderErrorsCount,
-            width: 180,
-            filterable: true
           },
           {
             field: 'dateDepot',
