@@ -10,6 +10,7 @@ import VolumesPompes from '@/components/declarations/dossier/prelevements/volume
 import SectionCard from '@/components/ui/section-card.js'
 
 const PrelevementsDetails = ({
+  moisDeclaration,
   tableauSuiviPrelevements,
   pointsPrelevement,
   selectedPointId,
@@ -78,6 +79,7 @@ const PrelevementsDetails = ({
                 handleSelect={() => selectedPoint(poinPrelevementId)}
               >
                 <Spreadsheet
+                  moisDeclaration={moisDeclaration}
                   file={file}
                   downloadFile={handleDownload}
                 />
@@ -94,6 +96,7 @@ const PrelevementsDetails = ({
       </Alert>
     )
   }, [
+    moisDeclaration,
     tableauSuiviPrelevements,
     pointsPrelevement,
     selectedPointId,

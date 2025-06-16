@@ -1,16 +1,36 @@
+'use client'
+
 import {fr} from '@codegouvfr/react-dsfr'
 import Button from '@codegouvfr/react-dsfr/Button'
 import Tag from '@codegouvfr/react-dsfr/Tag'
 import {
   Box, Divider,
-  Typography
+  Typography, Alert
 } from '@mui/material'
 
 import FileValidationErrors from '@/components/declarations/file-validation-errors.js'
 import PrelevementsCalendar from '@/components/declarations/prelevements-calendar.js'
 
-const Spreadsheet = ({file, downloadFile}) => {
+const Spreadsheet = ({moisDeclaration, file, downloadFile}) => {
   const [, ...filename] = file.storageKey.split('-')
+  // Vérifie si les dates de prélèvement (minDate / maxDate) se situent dans le mois déclaré
+  const declarationDate = new Date(moisDeclaration)
+  const isInDeclarationMonth = date => {
+    const d = new Date(date)
+    return d.getMonth() === declarationDate.getMonth()
+           && d.getFullYear() === declarationDate.getFullYear()
+  }
+
+  const {minDate, maxDate} = file.result?.data ?? {}
+
+  const hasDatesOutsideDeclMonth = (() => {
+    if (!minDate || !maxDate) {
+      return false
+    }
+
+    return !isInDeclarationMonth(minDate) || !isInDeclarationMonth(maxDate)
+  })()
+
   return (
     <Box key={file.id_file} className='flex flex-col gap-6'>
 
@@ -48,6 +68,12 @@ const Spreadsheet = ({file, downloadFile}) => {
             <Divider textAlign='left'>
               Calendrier des prélèvements
             </Divider>
+
+            {hasDatesOutsideDeclMonth && (
+              <Alert severity='warning' sx={{mb: 2}}>
+                Certaines dates de prélèvement ne sont pas situées dans le mois déclaré : {new Intl.DateTimeFormat('fr-FR', {month: 'long', year: 'numeric'}).format(new Date(moisDeclaration))}
+              </Alert>
+            )}
 
             <PrelevementsCalendar data={file.result.data} />
           </Box>

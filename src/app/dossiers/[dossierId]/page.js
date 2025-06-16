@@ -51,6 +51,7 @@ const DossierPage = async ({params}) => {
       <DossierHeader
         numero={dossier.number}
         status={dossier.status}
+        moisDeclaration={dossier.moisDeclaration}
         dateDepot={dossier.dateDepot}
         dsUrl={getDossierDSURL(dossierId)}
       />

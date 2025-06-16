@@ -4,7 +4,7 @@ import {Box} from '@mui/system'
 
 import DossierStateBadge from '@/components/declarations/dossier-state-badge.js'
 
-const DossierHeader = ({numero, status, dateDepot, dsUrl}) => (
+const DossierHeader = ({numero, status, dateDepot, moisDeclaration, dsUrl}) => (
   <Box className='flex flex-col gap-2'>
     <Box className='flex justify-between gap-4 flex-wrap'>
       <Box className='flex gap-4 items-center flex-wrap'>
@@ -23,11 +23,20 @@ const DossierHeader = ({numero, status, dateDepot, dsUrl}) => (
       </Button>
     </Box>
 
-    <Box className='flex flex-wrap gap-2'>
-      <Box component='span' className='ri-inbox-2-line' />
-      <Typography variant='body1'>
-        Date de dépôt {new Intl.DateTimeFormat('fr-FR', {dateStyle: 'short'}).format(new Date(dateDepot))}
-      </Typography>
+    <Box className='flex flex-wrap gap-4'>
+      <Box className='flex flex-wrap gap-2'>
+        <Box component='span' className='ri-inbox-2-line' />
+        <Typography variant='body1'>
+          Date de dépôt : {new Intl.DateTimeFormat('fr-FR', {dateStyle: 'short'}).format(new Date(dateDepot))}
+        </Typography>
+      </Box>
+
+      <Box className='flex flex-wrap gap-2'>
+        <Box component='span' className='fr-icon-calendar-event-fill' />
+        <Typography variant='body1'>
+          Mois déclaré : {new Intl.DateTimeFormat('fr-FR', {month: 'long', year: 'numeric'}).format(new Date(moisDeclaration))}
+        </Typography>
+      </Box>
     </Box>
   </Box>
 )

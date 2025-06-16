@@ -95,6 +95,7 @@ const DossierDetails = ({dossier, preleveur, files, idPoints}) => {
       />
 
       <PrelevementsDetails
+        moisDeclaration={dossier.moisDeclaration}
         tableauSuiviPrelevements={dossier.tableauSuiviPrelevements}
         pointsPrelevementId={idPoints}
         pointsPrelevement={pointsPrelevement}
