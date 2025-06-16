@@ -38,12 +38,12 @@ const Spreadsheet = ({moisDeclaration, file, downloadFile}) => {
         <>
           <Box className='flex flex-col gap-4'>
             <Divider textAlign='left'>
-              Paramètres présents par pas de temps
+              Paramètres par pas de temps
             </Divider>
 
             <Box className='flex flex-col gap-2'>
               {file.result.data.dailyParameters && (
-                <Box className='flex gap-1 items-center'>
+                <Box className='flex flex-wrap gap-1 items-center'>
                   Journalier : {file.result.data.dailyParameters.map(param => (
                     <Tag key={param.paramIndex} sx={{m: 1}}>
                       {param.nom_parametre} / {param.unite}
@@ -53,7 +53,7 @@ const Spreadsheet = ({moisDeclaration, file, downloadFile}) => {
               )}
 
               {file.result.data.fifteenMinutesParameters && (
-                <Box className='flex gap-1 items-center'>
+                <Box className='flex flex-wrap gap-1 items-center'>
                   Quinze minutes : {file.result.data.fifteenMinutesParameters.map(param => (
                     <Tag key={param.paramIndex} sx={{m: 1}}>
                       {param.nom_parametre} ({param.unite})
@@ -84,7 +84,7 @@ const Spreadsheet = ({moisDeclaration, file, downloadFile}) => {
         <FileValidationErrors errors={file.result.errors} />
       )}
 
-      <Box className='flex justify-between mt-4'>
+      <Box className='flex flex-wrap justify-between mt-4'>
         <Box className='flex flex-col p-2'>
           <Typography>
             <Box component='span' className='pr-1' sx={{color: fr.colors.decisions.text.label.blueFrance.default}} />
