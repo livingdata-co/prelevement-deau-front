@@ -18,6 +18,7 @@ const OptionalPointFieldsForm = (
     point,
     setPoint,
     bnpeList,
+    bvBdCarthageList,
     mesoList,
     meContinentalesBvList
   }
@@ -30,7 +31,7 @@ const OptionalPointFieldsForm = (
       label='Autres noms'
       nativeInputProps={{
         defaultValue: point?.autresNoms,
-        placeholder: 'Entrer les autres noms',
+        placeholder: 'Entrer les autres noms, séparés par une virgule',
         onChange: e => setPoint(prev => ({...prev, autresNoms: e.target.value}))
       }}
     />
@@ -90,9 +91,9 @@ const OptionalPointFieldsForm = (
           <SearchAutocomplete
             options={bnpeList.map(bnpe => ({
               bnpe,
-              label: bnpe.code_point_prelevement
+              label: `${bnpe.code_point_prelevement} - ${bnpe.nom_ouvrage}`
             }))}
-            defaultValue={point?.bnpe?.point}
+            defaultValue={point?.bnpe?.nom}
             className={className}
             id={id}
             placeholder={placeholder}
@@ -113,9 +114,9 @@ const OptionalPointFieldsForm = (
           <SearchAutocomplete
             options={meContinentalesBvList.map(meContinentales => ({
               meContinentales,
-              label: meContinentales.code_dce
+              label: `${meContinentales.code_dce} - ${meContinentales.nom}`
             }))}
-            defaultValue={point?.meContinentalesBv?.code}
+            defaultValue={point?.meContinentalesBv?.nom}
             className={className}
             id={id}
             placeholder={placeholder}
@@ -128,19 +129,34 @@ const OptionalPointFieldsForm = (
         )}
       />
     </div>
-    <Input
-      label='Bassin versant BD Carthage'
-      nativeInputProps={{
-        defaultValue: point?.bvBdCarthage,
-        placeholder: 'Entrer le bassin versant BD Carthage',
-        onChange: e => setPoint(prev => ({...prev, bvBdCarthage: e.target.value}))
-      }}
-    />
+    <div className='pb-5'>
+      <p className='pb-2'>Bassin versant BD Carthage</p>
+      <SearchBar
+        label='Rechercher un BV BD Carthage'
+        renderInput={({className, id, placeholder, type}) => (
+          <SearchAutocomplete
+            options={bvBdCarthageList.map(bvBdCarthage => ({
+              bvBdCarthage,
+              label: `${bvBdCarthage.code_cours} - ${bvBdCarthage.toponyme_t}`
+            }))}
+            defaultValue={point?.bvBdCarthage?.nom}
+            className={className}
+            id={id}
+            placeholder={placeholder}
+            type={type}
+            onChange={(e, value) => setPoint(prev => ({
+              ...prev,
+              bvBdCarthage: value?.bvBdCarthage?.code_cours
+            }))}
+          />
+        )}
+      />
+    </div>
     <div className='w-full grid grid-cols-2 gap-4 py-5'>
       <DynamicCheckbox
         options={[
           {
-            label: 'Zone reglementée (ZRE)',
+            label: 'Zone règlementée (ZRE)',
             nativeInputProps: {
               defaultChecked: point.zre || false,
               onChange: e => setPoint(prev => ({...prev, zre: e.target.checked}))
