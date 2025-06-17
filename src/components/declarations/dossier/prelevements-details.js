@@ -55,14 +55,6 @@ const PrelevementsDetails = ({
       )
     }
 
-    if (tableauSuiviPrelevements) {
-      return (
-        <Alert severity='info'>
-          Ce type de dossier n’est pas encore pris en charge.
-        </Alert>
-      )
-    }
-
     if (files && files.length > 0) {
       return (
         files.map(file => {
@@ -83,6 +75,12 @@ const PrelevementsDetails = ({
                 status={file?.result.errors?.length > 0 || !file.result.data ? 'error' : 'success'}
                 handleSelect={() => selectedPoint(poinPrelevementId)}
               >
+                {tableauSuiviPrelevements && (
+                  <Alert severity='info'>
+                    Ce type de dossier n’est pas encore pris en charge.
+                  </Alert>
+                )}
+
                 <Spreadsheet
                   moisDeclaration={moisDeclaration}
                   file={file}
