@@ -43,8 +43,13 @@ const PrelevementsDetails = ({
           volumePreleveTotal={volumePreleveTotal}
           status={volumePreleveTotal ? 'success' : 'error'}
         >
-
-          {compteur && <Compteur compteur={compteur} relevesIndex={relevesIndex} />}
+          {compteur && (
+            <Compteur
+              compteur={compteur}
+              relevesIndex={relevesIndex}
+              moisDeclaration={moisDeclaration}
+            />
+          )}
           {volumesPompes && <VolumesPompes volumesPompes={volumesPompes} />}
         </PrelevementsAccordion>
       )
