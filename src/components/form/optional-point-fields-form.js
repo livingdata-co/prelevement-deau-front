@@ -93,7 +93,7 @@ const OptionalPointFieldsForm = (
               bnpe,
               label: `${bnpe.code_point_prelevement} - ${bnpe.nom_ouvrage}`
             }))}
-            defaultValue={point?.bnpe?.nom}
+            defaultValue={point?.bnpe?.nom || point?.bnpe?.point}
             className={className}
             id={id}
             placeholder={placeholder}
