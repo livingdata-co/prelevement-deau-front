@@ -32,7 +32,7 @@ const PrelevementsDetails = ({
       if (relevesIndex) {
         volumePreleveTotal = relevesIndex.reduce((acc, volume) => acc + volume.valeur, 0)
       } else if (volumesPompes) {
-        volumePreleveTotal = volumePreleveTotal.reduce((acc, volume) => acc + volume.volumePompeM3, 0)
+        volumePreleveTotal = volumesPompes.reduce((acc, volume) => acc + volume.volumePompeM3, 0)
       }
 
       return (
