@@ -8,6 +8,7 @@ import {
   Typography, Alert
 } from '@mui/material'
 
+import DailyValuesChart from '@/components/declarations/dossier/prelevements/daily-values-chart.js'
 import FileValidationErrors from '@/components/declarations/file-validation-errors.js'
 import PrelevementsCalendar from '@/components/declarations/prelevements-calendar.js'
 
@@ -76,6 +77,7 @@ const Spreadsheet = ({moisDeclaration, file, downloadFile}) => {
             )}
 
             <PrelevementsCalendar data={file.result.data} />
+            <DailyValuesChart data={file.result.data} />
           </Box>
         </>
       )}
