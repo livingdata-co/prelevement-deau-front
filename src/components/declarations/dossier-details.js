@@ -35,7 +35,8 @@ const DossierDetails = ({dossier, preleveur, files, idPoints}) => {
   }, [idPoints])
 
   const downloadFile = async storageKey => {
-    const [hash, filename] = storageKey.split('-')
+    const [hash, ...filenameParts] = storageKey.split('-')
+    const filename = filenameParts.join('-')
     try {
       const file = await getDownloadableFile(dossier._id, hash)
       const url = URL.createObjectURL(file)
