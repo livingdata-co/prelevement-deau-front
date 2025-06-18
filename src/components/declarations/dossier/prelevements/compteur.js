@@ -15,10 +15,10 @@ import {
 import {format} from 'date-fns'
 
 const Compteur = ({compteur, relevesIndex, moisDeclaration}) => {
-  const hasDatesOutsideDeclMonth = relevesIndex.some(prelevement => {
+  const hasDatesOutsideDeclMonth = moisDeclaration ? relevesIndex.some(prelevement => {
     const prelevementDate = new Date(prelevement.date)
     return prelevementDate.getMonth() !== new Date(moisDeclaration).getMonth()
-  })
+  }) : false
 
   return (
     <>

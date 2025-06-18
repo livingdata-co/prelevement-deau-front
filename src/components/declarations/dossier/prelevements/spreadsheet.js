@@ -13,9 +13,10 @@ import PrelevementsCalendar from '@/components/declarations/prelevements-calenda
 
 const Spreadsheet = ({moisDeclaration, file, downloadFile}) => {
   const [, ...filename] = file.storageKey.split('-')
+
   // Vérifie si les dates de prélèvement (minDate / maxDate) se situent dans le mois déclaré
-  const declarationDate = new Date(moisDeclaration)
   const isInDeclarationMonth = date => {
+    const declarationDate = new Date(moisDeclaration)
     const d = new Date(date)
     return d.getMonth() === declarationDate.getMonth()
            && d.getFullYear() === declarationDate.getFullYear()
@@ -24,7 +25,7 @@ const Spreadsheet = ({moisDeclaration, file, downloadFile}) => {
   const {minDate, maxDate} = file.result?.data ?? {}
 
   const hasDatesOutsideDeclMonth = (() => {
-    if (!minDate || !maxDate) {
+    if (!minDate || !maxDate || !moisDeclaration) {
       return false
     }
 
