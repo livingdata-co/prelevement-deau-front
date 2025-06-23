@@ -88,7 +88,7 @@ const PrelevementsDetails = ({
       return (
         <PrelevementsAccordion
           isOpen
-          idPoint={pointsPrelevement[0]}
+          idPoint={pointsPrelevement[0]?.id_point}
           pointPrelevement={pointsPrelevement[0]}
           volumePreleveTotal={volumePrelevementTotal}
           status={volumePrelevementTotal ? 'success' : 'error'}
