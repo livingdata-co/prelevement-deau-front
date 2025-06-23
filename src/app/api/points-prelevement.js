@@ -84,10 +84,36 @@ export async function createExploitation(payload) {
   return response.json()
 }
 
+export async function updateExploitation(idExploitation, payload) {
+  const response = await fetch(`${API_URL}/api/exploitations/${idExploitation}`, {
+    headers,
+    method: 'PUT',
+    body: JSON.stringify(payload)
+  })
+
+  return response.json()
+}
+
+export async function getExploitation(exploitationId) {
+  const response = await fetch(`${API_URL}/api/exploitations/${exploitationId}`, {headers})
+  const exploitation = await response.json()
+
+  return exploitation
+}
+
 export async function getExploitationsByPointId(pointId) {
   const response = await fetch(`${API_URL}/api/points-prelevement/${pointId}/exploitations`, {headers})
   const exploitations = await response.json()
   return exploitations
+}
+
+export async function deleteExploitation(exploitationId) {
+  const response = await fetch(`${API_URL}/api/exploitations/${exploitationId}`, {
+    headers,
+    method: 'DELETE'
+  })
+
+  return response.json()
 }
 
 export async function getStats() {
