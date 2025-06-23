@@ -1,6 +1,8 @@
 import {useMemo} from 'react'
 
-import {Skeleton, Box, Alert} from '@mui/material'
+import {
+  Skeleton, Box, Alert
+} from '@mui/material'
 
 import Compteur from './prelevements/compteur.js'
 
@@ -8,8 +10,63 @@ import PrelevementsAccordion from '@/components/declarations/dossier/prelevement
 import Spreadsheet from '@/components/declarations/dossier/prelevements/spreadsheet.js'
 import VolumesPompes from '@/components/declarations/dossier/prelevements/volumes-pompes.js'
 import SectionCard from '@/components/ui/section-card.js'
+import {formatNumber} from '@/utils/number.js'
+
+// Helpers --------------------------------------------------------------
+
+/**
+ * Sort an array of points de prélèvement alphabetically by their `nom`.
+ * @param {Array} points
+ * @returns {Array}
+ */
+const sortPointsPrelevementByName = points =>
+  [...points].sort((a, b) => {
+    const nomA = a.nom?.toLowerCase() || ''
+    const nomB = b.nom?.toLowerCase() || ''
+    return nomA.localeCompare(nomB)
+  })
+
+/**
+ * Sort files so that those without point de prélèvement come first,
+ * then the others ordered by the name of their point de prélèvement.
+ * @param {Array} files
+ * @param {Array} pointsPrelevement
+ * @returns {Array}
+ */
+const sortFilesByPointPrelevement = (files, pointsPrelevement) => {
+  const findPoint = file =>
+    pointsPrelevement.find(
+      p =>
+        p.id_point
+        === (file.result?.data?.pointPrelevement || file.pointsPrelevements[0])
+    )
+
+  return [...files].sort((a, b) => {
+    const pointA = findPoint(a)
+    const pointB = findPoint(b)
+
+    if (!pointA && pointB) {
+      return -1
+    }
+
+    if (pointA && !pointB) {
+      return 1
+    }
+
+    if (!pointA && !pointB) {
+      return 0
+    }
+
+    const nomA = pointA.nom?.toLowerCase() || ''
+    const nomB = pointB.nom?.toLowerCase() || ''
+    return nomA.localeCompare(nomB)
+  })
+}
+
+// ---------------------------------------------------------------------
 
 const PrelevementsDetails = ({
+  volumePrelevementTotal,
   moisDeclaration,
   tableauSuiviPrelevements,
   pointsPrelevement,
@@ -28,20 +85,13 @@ const PrelevementsDetails = ({
     }
 
     if (volumesPompes || compteur) {
-      let volumePreleveTotal = null
-      if (relevesIndex) {
-        volumePreleveTotal = relevesIndex.reduce((acc, volume) => acc + volume.valeur, 0)
-      } else if (volumesPompes) {
-        volumePreleveTotal = volumesPompes.reduce((acc, volume) => acc + volume.volumePompeM3, 0)
-      }
-
       return (
         <PrelevementsAccordion
           isOpen
           idPoint={pointsPrelevement[0]}
           pointPrelevement={pointsPrelevement[0]}
-          volumePreleveTotal={volumePreleveTotal}
-          status={volumePreleveTotal ? 'success' : 'error'}
+          volumePreleveTotal={volumePrelevementTotal}
+          status={volumePrelevementTotal ? 'success' : 'error'}
         >
           {compteur && (
             <Compteur
@@ -56,8 +106,11 @@ const PrelevementsDetails = ({
     }
 
     if (files && files.length > 0) {
+      const sortedPointsPrelevement = sortPointsPrelevementByName(pointsPrelevement)
+      const filesSorted = sortFilesByPointPrelevement(files, pointsPrelevement)
+
       return (
-        files.map(file => {
+        filesSorted.map(file => {
           const poinPrelevementId = file.result?.data?.pointPrelevement || file.pointsPrelevements[0]
           return (
             <Box
@@ -70,7 +123,7 @@ const PrelevementsDetails = ({
               <PrelevementsAccordion
                 idPoint={poinPrelevementId}
                 isOpen={selectedPointId === poinPrelevementId}
-                pointPrelevement={pointsPrelevement.find(p => p.id_point === poinPrelevementId)}
+                pointPrelevement={sortedPointsPrelevement.find(p => p.id_point === poinPrelevementId)}
                 volumePreleveTotal={file.result?.data?.volumePreleveTotal}
                 status={file?.result.errors?.length > 0 || !file.result.data ? 'error' : 'success'}
                 handleSelect={() => selectedPoint(poinPrelevementId)}
@@ -99,6 +152,7 @@ const PrelevementsDetails = ({
       </Alert>
     )
   }, [
+    volumePrelevementTotal,
     moisDeclaration,
     tableauSuiviPrelevements,
     pointsPrelevement,
@@ -114,6 +168,12 @@ const PrelevementsDetails = ({
 
   return (
     <SectionCard title='Prélèvements' icon='fr-icon-drop-line'>
+      {volumePrelevementTotal !== null && (
+        <Alert severity='info'>
+          Volume total prélevé : <b>{formatNumber(volumePrelevementTotal)} m³</b>
+        </Alert>
+      )}
+
       {content}
     </SectionCard>
   )
