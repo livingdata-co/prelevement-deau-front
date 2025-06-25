@@ -56,7 +56,7 @@ const Popup = ({point}) => {
       </Box>
 
       <Box className='flex flex-col gap-1'>
-        <Box className='flex gap-1'>
+        <Box className='flex flex-wrap gap-1'>
           {usages.map(usage => (
             <Chip
               key={usage}
