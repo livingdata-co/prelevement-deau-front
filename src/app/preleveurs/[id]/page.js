@@ -8,19 +8,13 @@ import {getPreleveur, getPointsFromPreleveur} from '@/app/api/points-prelevement
 import {getUsagesColors} from '@/components/map/legend-colors.js'
 import LabelValue from '@/components/ui/label-value.js'
 import {StartDsfrOnHydration} from '@/dsfr-bootstrap/index.js'
-import {parseHttpError} from '@/lib/http-error.js'
 
 const Page = async ({params}) => {
   const {id} = await params
 
-  let preleveur
-  try {
-    preleveur = await getPreleveur(id)
-  } catch (error) {
-    const {code} = parseHttpError(error)
-    if (code === 404) {
-      notFound()
-    }
+  const preleveur = await getPreleveur(id)
+  if (!preleveur) {
+    notFound()
   }
 
   const points = await getPointsFromPreleveur(id)

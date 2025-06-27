@@ -2,7 +2,6 @@ import {redirect} from 'next/navigation'
 import {getServerSession} from 'next-auth'
 import {getSession, signOut} from 'next-auth/react'
 
-import {createHttpError} from '@/lib/http-error.js'
 import {authOptions} from '@/server/auth.js'
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL
@@ -54,36 +53,13 @@ export async function executeRequest(urlOrOptions, moreOptions) {
 
   const response = await fetch(`${API_URL}/${url}`, fetchOptions)
 
-  if (!response.ok) {
-    // Handle authentication errors by forcing a sign‑out then redirecting.
-    if (response.status === 401 || response.status === 403) {
-      if (typeof window !== 'undefined') {
-        await signOut({callbackUrl: '/login'})
-      }
-
-      redirect('/login')
+  if (!response.ok // Handle authentication errors by forcing a sign‑out then redirecting.
+    && (response.status === 401 || response.status === 403)) {
+    if (typeof window !== 'undefined') {
+      await signOut({callbackUrl: '/login'})
     }
 
-    // Build a rich error payload so that the client error boundary can
-    // understand what happened.  We serialise the payload into the Error
-    // message because Next.js only forwards `message` and `digest`.
-    let json
-    if (response.headers.get('Content-Type')?.startsWith('application/json')) {
-      try {
-        json = await response.json()
-      } catch {} // ignore JSON parse errors
-    }
-
-    throw createHttpError({
-      status: response.status,
-      code: json?.code ?? response.status,
-      message: json?.message ?? response.statusText,
-      details: json?.details
-    })
-  }
-
-  if (response.headers.get('Content-Type')?.startsWith('application/json')) {
-    return response.json()
+    redirect('/login')
   }
 
   return response
