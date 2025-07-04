@@ -103,7 +103,7 @@ const MapFilters = ({filters, usagesOptions, typeMilieuOptions, statusOptions, o
                 title={
                   <>
                     <p className='p-2'><b><u>En activité</u> :</b> Exploitation qui fait actuellement encore l’objet de prélèvement.</p>
-                    <p className='p-2'><b><u>Terminée</u> :</b> Exploitation arrêtée sans que cela soit du à une raison technique particulière.</p>
+                    <p className='p-2'><b><u>Terminée</u> :</b> Exploitation arrêtée sans que cela soit dû à une raison technique particulière.</p>
                     <p className='p-2'><b><u>Abandonnée</u> :</b> Il y a une raison technique qui ne permet plus l’exploitation du point de prélèvement pour l’usage visé (ex : contamination par les pesticides).</p>
                     <p className='p-2'><b><u>Non renseigné</u> :</b> Pas d’information sur l’activité de l’exploitation.</p>
                   </>
